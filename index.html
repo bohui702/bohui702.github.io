@@ -3,129 +3,179 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="新洽記商行｜傳承近百年的花生滋味與做人情味。">
+  <meta name="description" content="新洽記商行｜始於 1928，四代傳承的花生滋味。">
   <title>新洽記商行</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;900&family=Noto+Serif+TC:wght@600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="announcement">
-    <p>新洽記商行・始於 1928・四代傳承的好滋味</p>
-    <button aria-label="關閉公告" data-close-announcement></button>
+    <p>新洽記商行・始於 1928・手作花生與老商行的人情味</p>
+    <button aria-label="關閉公告" data-close-announcement>×</button>
   </div>
 
   <header class="site-header">
     <a class="brand" href="#top" aria-label="新洽記商行首頁">
-      <span class="brand-mark">洽</span>
+      <img src="source/LOGO.jpg" alt="">
       <span><strong>新洽記商行</strong><small>SIN HIAP KI · 1928</small></span>
     </a>
     <button class="menu-button" aria-label="開啟選單" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
     <nav class="site-nav" aria-label="主要導覽">
-      <a href="#about">關於我們</a>
-      <a href="#products">精選商品</a>
-      <a href="#news">最新消息</a>
-      <a href="#gallery">活動花絮</a>
-      <a class="nav-cta" href="#contact">聯絡我們</a>
-      <span class="nav-socials">
-        <a href="https://www.instagram.com/sinhiapki_1928" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" class="icon-fill"/></svg></a>
-        <a href="https://www.facebook.com/profile.php?id=61574707400729" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-8h3l.5-4H14V7c0-1.2.5-2 2.2-2H18V1.5c-.7-.1-1.7-.2-2.8-.2-3.2 0-5.2 2-5.2 5.5V9H7v4h3v8"/></svg></a>
-      </span>
+      <a href="#kitchen">特色</a>
+      <a href="#products">商品</a>
+      <a href="#about">故事</a>
+      <a href="#news">消息</a>
+      <a href="#gallery">相簿</a>
+      <a class="nav-cta" href="#contact">聯絡</a>
     </nav>
   </header>
 
   <main id="top">
     <section class="hero">
+      <img class="hero-bg" src="source/produce/produce_2.jpg" alt="新洽記商行花生商品展示">
+      <div class="hero-shade"></div>
       <div class="hero-content reveal">
-        <p class="eyebrow">SINCE 1928 · FOUR GENERATIONS</p>
-        <h1>一粒花生，<br><em>承接四代人的記憶。</em></h1>
-        <p class="hero-copy">循著花生殼上的紋路，找回曾祖父創立商行時，對品質的堅持、信心，以及樂善好施的人情味。</p>
+        <p class="eyebrow">FRESH PEANUTS · OLD-SCHOOL HEART</p>
+        <h1>新洽記商行</h1>
+        <p>一粒花生，承接四代人的記憶。把近百年的堅持，做成日常也能分享的好滋味。</p>
         <div class="hero-actions">
-          <a class="button primary" href="#products">探索商品 <span>→</span></a>
-          <a class="text-link" href="#about">認識品牌 <span>↗</span></a>
+          <a class="button primary" href="#products">查看商品</a>
+          <a class="button ghost" href="#about">品牌故事</a>
         </div>
       </div>
-      <div class="hero-visual reveal">
-        <img class="hero-image" src="source/produce/produce_1.jpg" alt="新洽記商行花生禮盒商品展示">
-        <div class="floating-note"><span>1928</span>始於初心</div>
-        <p class="vertical-copy">A LEGACY OF GOOD TASTE</p>
+      <div class="hero-card reveal">
+        <b>1928</b>
+        <span>四代傳承</span>
       </div>
     </section>
 
-    <section class="intro section" id="about">
-      <div class="section-label">01 / ABOUT</div>
-      <figure class="heritage-photo reveal">
-        <img src="source/family.png" alt="新洽記商行早期家族與店面合影" loading="lazy">
-        <figcaption><span>約 1970s</span> 新洽記商行・家族珍藏影像</figcaption>
-      </figure>
-      <div class="intro-story reveal">
-        <p class="eyebrow">OUR LEGACY</p>
-        <h2>花生殼的紋路，<br>也是一個家族的脈絡。</h2>
-        <p>近百年前，曾祖父創立了新洽記商行。穿越四代時光，我們想找回那份對品質的堅持與信心，也延續樂善好施、真誠待人的人情味。這不只是家族的回憶，更是我們向曾祖父致敬的方式。</p>
+    <section class="kitchen section" id="kitchen">
+      <div class="section-head centered reveal">
+        <p class="eyebrow">INSIDE OUR SHOP</p>
+        <h2>我們在意的三件事</h2>
       </div>
-      <div class="values reveal">
-        <article><b>01</b><h3>品質堅持</h3><p>承襲曾祖父的初心，認真看待每一份食材與製程。</p></article>
-        <article><b>02</b><h3>四代傳承</h3><p>近百年的家族記憶，在每一粒花生裡繼續延伸。</p></article>
-        <article><b>03</b><h3>真誠人情</h3><p>保留老商行樂善好施、以誠待人的溫暖精神。</p></article>
+      <div class="kitchen-grid">
+        <article class="reveal">
+          <img src="source/photo/photo_1.jpg" alt="手中的花生">
+          <h3>新鮮原料</h3>
+          <p>挑選適合烘焙與調味的花生，讓香氣、口感與品質維持穩定。</p>
+        </article>
+        <article class="reveal">
+          <img src="source/produce/produce_1.jpg" alt="新洽記商行禮盒">
+          <h3>手作溫度</h3>
+          <p>從日常點心到節慶禮盒，保留老商行真誠待人的樸實精神。</p>
+        </article>
+        <article class="reveal">
+          <img src="source/photo/photo_2.jpg" alt="新洽記活動現場">
+          <h3>分享滋味</h3>
+          <p>好吃不是華麗，而是讓人想再拿一口，也願意帶給重要的人。</p>
+        </article>
       </div>
     </section>
 
     <section class="products section" id="products">
       <div class="section-head reveal">
-        <div><p class="eyebrow">SELECTED PRODUCTS</p><h2>本季精選商品</h2></div>
-        <p>從日常需要開始，挑一件真正適合你的生活好物。</p>
+        <div>
+          <p class="eyebrow">WHAT'S POPULAR</p>
+          <h2>本季熱門商品</h2>
+        </div>
+        <p>首頁先放三款熱門品項；完整商品可在選購視窗裡滑動查看並勾選。</p>
       </div>
       <div class="product-grid" data-products></div>
-      <div class="center"><button class="button outline" type="button" data-open-products>查看所有商品 <span>→</span></button></div>
+      <div class="center">
+        <button class="button outline" type="button" data-open-products>查看所有商品</button>
+      </div>
     </section>
 
-    <section class="quote-banner">
-      <p>「一份好滋味，承接近百年的記憶與人情。」</p>
-      <span>— SIN HIAP KI · 1928</span>
+    <section class="feature-banner">
+      <img src="source/produce/produce_1.jpg" alt="新洽記商行商品禮盒">
+      <div>
+        <p class="eyebrow">SIGNATURE GIFT BOX</p>
+        <h2>一盒花生，裝著老商行的心意。</h2>
+        <p>適合拜訪、節慶、活動分享，也適合放在家裡，慢慢吃出熟悉的香氣。</p>
+      </div>
+    </section>
+
+    <section class="intro section" id="about">
+      <figure class="heritage-photo reveal">
+        <img src="source/family.png" alt="新洽記商行早期家族與店面合影" loading="lazy">
+      </figure>
+      <div class="intro-story reveal">
+        <p class="eyebrow">OUR STORY</p>
+        <h2>花生殼的紋路，也是家族的脈絡。</h2>
+        <p>近百年前，曾祖父創立了新洽記商行。穿越四代時光，我們想找回那份對品質的堅持與信心，也延續樂善好施、真誠待人的人情味。這不只是家族的回憶，更是我們向曾祖父致敬的方式。</p>
+      </div>
     </section>
 
     <section class="news section" id="news">
       <div class="section-head reveal">
-        <div><p class="eyebrow">NEWS & STORIES</p><h2>最新消息</h2></div>
+        <div>
+          <p class="eyebrow">NEWS & STORIES</p>
+          <h2>最新消息</h2>
+        </div>
       </div>
       <div class="news-list" data-news></div>
     </section>
 
     <section class="gallery section" id="gallery">
       <div class="section-head reveal">
-        <div><p class="eyebrow">EVENT GALLERY</p><h2>活動花絮</h2></div>
-        <p>走進現場，看看我們一起創造的每一個美好片刻。</p>
+        <div>
+          <p class="eyebrow">CORNER GALLERY</p>
+          <h2>活動花絮</h2>
+        </div>
+        <p>每個相簿可先預覽多張照片，點進去再放大查看。</p>
       </div>
       <div class="gallery-grid" data-gallery></div>
     </section>
 
     <section class="contact section" id="contact">
       <div class="contact-copy reveal">
-        <p class="eyebrow">LET'S KEEP IN TOUCH</p>
-        <h2>想知道更多，<br>或和我們聊聊嗎？</h2>
-        <p>歡迎訂閱品牌消息，第一時間收到新品上市、期間活動與新洽記的故事。</p>
+        <p class="eyebrow">LOCATION & CONTACT</p>
+        <h2>想了解商品或合作活動，歡迎聯絡我們。</h2>
+        <p>也可以追蹤社群，查看最新商品、活動擺攤與品牌日常。</p>
+        <div class="contact-links">
+          <a href="mailto:sinhiapki.1928@gmail.com">sinhiapki.1928@gmail.com</a>
+          <a href="https://www.instagram.com/sinhiapki_1928" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://www.facebook.com/profile.php?id=61574707400729" target="_blank" rel="noopener noreferrer">Facebook</a>
+        </div>
       </div>
       <form class="subscribe-form reveal" data-subscribe-form>
-        <label for="email">電子信箱</label>
-        <div><input id="email" type="email" placeholder="hello@example.com" required><button type="submit">傳給我們 →</button></div>
+        <label for="email">訂閱品牌消息</label>
+        <div>
+          <input id="email" type="email" placeholder="hello@example.com" required>
+          <button type="submit">送出</button>
+        </div>
       </form>
     </section>
   </main>
 
   <footer>
-    <a class="brand footer-brand" href="#top"><span class="brand-mark">洽</span><span><strong>新洽記商行</strong><small>SIN HIAP KI · 1928</small></span></a>
-    <div><h4>快速連結</h4><a href="#products">精選商品</a><a href="#news">最新消息</a><a href="#gallery">活動花絮</a></div>
-    <div><h4>聯絡資訊</h4><a href="mailto:sinhiapki.1928@gmail.com">sinhiapki.1928@gmail.com</a></div>
-    <div class="footer-social"><h4>追蹤我們</h4><a href="https://www.instagram.com/sinhiapki_1928" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.facebook.com/profile.php?id=61574707400729" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a class="qr-link" href="https://www.instagram.com/sinhiapki_1928" target="_blank" rel="noopener noreferrer"></a></div>
+    <a class="brand footer-brand" href="#top">
+      <img src="source/LOGO.jpg" alt="">
+      <span><strong>新洽記商行</strong><small>SIN HIAP KI · 1928</small></span>
+    </a>
+    <div>
+      <h4>快速連結</h4>
+      <a href="#products">熱門商品</a>
+      <a href="#news">最新消息</a>
+      <a href="#gallery">活動花絮</a>
+    </div>
+    <div>
+      <h4>聯絡資訊</h4>
+      <a href="mailto:sinhiapki.1928@gmail.com">sinhiapki.1928@gmail.com</a>
+      <a href="https://www.instagram.com/sinhiapki_1928" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/profile.php?id=61574707400729" target="_blank" rel="noopener noreferrer">Facebook</a>
+    </div>
     <p class="copyright">© <span data-year></span> SIN HIAP KI. ALL RIGHTS RESERVED.</p>
   </footer>
 
   <aside class="social-rail" aria-label="社群連結">
-    <a href="https://www.instagram.com/sinhiapki_1928" target="_blank" rel="noopener noreferrer" aria-label="追蹤 Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" class="icon-fill"/></svg></a>
-    <a href="https://www.facebook.com/profile.php?id=61574707400729" target="_blank" rel="noopener noreferrer" aria-label="追蹤 Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-8h3l.5-4H14V7c0-1.2.5-2 2.2-2H18V1.5c-.7-.1-1.7-.2-2.8-.2-3.2 0-5.2 2-5.2 5.5V9H7v4h3v8"/></svg></a>
+    <a href="https://www.instagram.com/sinhiapki_1928" target="_blank" rel="noopener noreferrer" aria-label="追蹤 Instagram">IG</a>
+    <a href="https://www.facebook.com/profile.php?id=61574707400729" target="_blank" rel="noopener noreferrer" aria-label="追蹤 Facebook">FB</a>
   </aside>
 
   <div class="modal" data-modal aria-hidden="true">
