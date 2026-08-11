@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="新洽記商行商品選購｜加入購物車、填寫訂購資訊，使用非信用卡付款方式完成訂單確認。">
+  <title>商品選購｜新洽記商行</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;900&family=Noto+Serif+TC:wght@600;700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="shop-page">
+  <div class="announcement">
+    <p>新洽記商行選購頁・本頁不會進行信用卡扣款，訂單送出後由人工確認。</p>
+    <button aria-label="關閉公告" data-close-announcement>×</button>
+  </div>
+
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="回到新洽記商行首頁">
+      <img src="source/LOGO.jpg" alt="">
+      <span><strong>新洽記商行</strong><small>SIN HIAP KI · 1928</small></span>
+    </a>
+    <button class="menu-button" aria-label="開啟選單" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="site-nav" aria-label="主要導覽">
+      <a href="index.html">首頁</a>
+      <a href="#catalog">商品列表</a>
+      <a href="#checkout">訂購資料</a>
+      <a class="nav-cta" href="#cart">購物車</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="shop-hero">
+      <div>
+        <p class="eyebrow">ORDER ONLINE · PAY AFTER CONFIRMATION</p>
+        <h1>商品選購</h1>
+        <p>選好商品與數量後，填寫聯絡與配送資料。付款方式可選擇銀行轉帳或貨到付款，不會在網站上直接刷卡扣款。</p>
+      </div>
+    </section>
+
+    <section class="shop-flow section" aria-label="選購流程">
+      <article><b>01</b><span>選擇商品</span></article>
+      <article><b>02</b><span>確認購物車</span></article>
+      <article><b>03</b><span>送出訂購資訊</span></article>
+      <article><b>04</b><span>人工確認付款與出貨</span></article>
+    </section>
+
+    <section class="shop-layout section">
+      <div class="shop-main" id="catalog">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">PRODUCT CATALOG</p>
+            <h2>商品列表</h2>
+          </div>
+          <p>價格與庫存可依實際狀況調整；目前訂單送出後會先由店家確認。</p>
+        </div>
+        <div class="catalog-grid" data-shop-products></div>
+      </div>
+
+      <aside class="cart-panel" id="cart">
+        <h2>購物車</h2>
+        <div class="cart-list" data-cart-list></div>
+        <div class="cart-total">
+          <span>小計</span>
+          <strong data-cart-total>NT$0</strong>
+        </div>
+        <a class="button primary cart-checkout" href="#checkout">填寫訂購資料</a>
+      </aside>
+    </section>
+
+    <section class="checkout section" id="checkout">
+      <div class="section-head checkout-head">
+        <div>
+          <p class="eyebrow">CHECKOUT</p>
+          <h2>訂購資料</h2>
+        </div>
+        <p>這裡會建立訂單摘要，不會串接線上刷卡。<br>實際付款資訊請等我們人工確認後提供。</p>
+      </div>
+
+      <form class="checkout-form" data-order-form>
+        <div class="form-grid">
+          <label><span class="required-label">姓名</span><input name="name" type="text" required
+              placeholder="請輸入姓名"></label>
+          <label><span class="required-label">稱謂</span>
+            <select name="title" required>
+              <option value="先生">先生</option>
+              <option value="小姐">小姐</option>
+            </select>
+          </label>
+          <label><span class="required-label">電話</span><input name="phone" type="tel" required
+              placeholder="請輸入可聯絡電話"></label>
+          <label><span class="required-label">配送方式</span>
+            <select name="delivery" required>
+              <option value="宅配到府">宅配到府</option>
+              <option value="超商店到店">超商店到店</option>
+              <option value="自行到店取貨">自行到店取貨</option>
+            </select>
+          </label>
+          <label class="form-wide"><span class="required-label">地址或取貨資訊</span><input name="address" type="text" required
+              placeholder="宅配地址、超商門市"></label>
+          <label class="form-wide">備註<textarea name="note" rows="4"
+              placeholder="想詢問的商品規格、送禮需求、希望到貨時間等"></textarea></label>
+        </div>
+
+        <fieldset class="payment-box">
+          <legend>付款方式</legend>
+          <label><input type="radio" name="payment" value="銀行轉帳" checked>
+            銀行轉帳<span>請依下方帳戶資訊匯款，並在備註填寫轉帳帳號後五碼。</span></label>
+          <label><input type="radio" name="payment" value="貨到付款"> 貨到付款<span>收到商品時付款，運費與代收費依實際配送方式確認。</span></label>
+        </fieldset>
+
+        <section class="bank-info" data-bank-transfer>
+          <h3>新洽記商行 • 銀行匯款資訊：</h3>
+          <dl>
+            <div>
+              <dt>銀行代碼</dt>
+              <dd>685 雲林縣土庫鎮農會</dd>
+            </div>
+            <div class="account-row">
+              <dt>帳戶號碼</dt>
+              <dd><strong data-account-number>68501010021491</strong><button type="button" data-copy-account>複製</button>
+              </dd>
+            </div>
+            <div>
+              <dt>帳戶戶名</dt>
+              <dd>新洽記商行黃喬壹</dd>
+            </div>
+          </dl>
+          <p>備註：轉帳收據請妥善保存，在下方備註填寫轉帳帳號後五碼以利出貨人員對帳。</p>
+        </section>
+
+        <button class="button primary" type="submit">產生訂單摘要</button>
+      </form>
+
+      <section class="order-result" data-order-result hidden></section>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="index.html">
+      <img src="source/LOGO.jpg" alt="">
+      <span><strong>新洽記商行</strong><small>SIN HIAP KI · 1928</small></span>
+    </a>
+    <div>
+      <h4>聯絡資訊</h4>
+      <a href="mailto:sinhiapki.1928@gmail.com">sinhiapki.1928@gmail.com</a>
+      <a href="https://www.instagram.com/sinhiapki_1928" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/profile.php?id=61574707400729" target="_blank"
+        rel="noopener noreferrer">Facebook</a>
+    </div>
+    <div>
+      <h4>付款提醒</h4>
+      <p>不提供網站直接刷卡扣款。</p>
+      <p>訂單由人工確認後再付款。</p>
+    </div>
+    <p class="copyright">© <span data-year></span> SIN HIAP KI. ALL RIGHTS RESERVED.</p>
+  </footer>
+
+  <script src="discount.js"></script>
+  <script src="shop.js"></script>
+</body>
+
+</html>
