@@ -3,8 +3,8 @@
 // ========================================
 // 請換成你 Supabase Project 的實際值。
 // 前端只能使用 Publishable Key（或 legacy anon key），不要放 service_role / secret key。
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_PUBLISHABLE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
+const SUPABASE_URL = "https://rvswrupfkswlvlsleduj.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_n7vI6heyLD4gUR5p8Z9JzQ_nr_R-cFu";
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
@@ -193,17 +193,16 @@ function renderCart() {
         <div>
           <strong>${product.name}</strong>
 
-          ${
-            hasDiscount
-              ? `
+          ${hasDiscount
+        ? `
                 <span>
                   <s>${money(originalPrice)}</s>
                   → <strong>${money(unitPrice)} / 份</strong>
                 </span>
                 <small>已套用數量優惠</small>
               `
-              : `<span>${money(originalPrice)} / 份</span>`
-          }
+        : `<span>${money(originalPrice)} / 份</span>`
+      }
 
           <span>小計：${money(subtotal)}</span>
         </div>
@@ -421,9 +420,8 @@ orderForm.addEventListener("submit", async event => {
         <strong>${orderNumber}</strong>
       </p>
 
-      ${
-        resultItems.length
-          ? `
+      ${resultItems.length
+        ? `
             <ul>
               ${resultItems.map(item => `
                 <li>
@@ -434,7 +432,7 @@ orderForm.addEventListener("submit", async event => {
               `).join("")}
             </ul>
           `
-          : ""
+        : ""
       }
 
       <p class="result-total">
