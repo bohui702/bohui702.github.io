@@ -58,17 +58,8 @@ const galleryItems = [
   ]}
 ];
 
-const icon = name => {
-  const paths = {
-    leaf: '<path d="M20 4C12 4 5 8 5 15c0 3 2 5 5 5 7 0 10-8 10-16Z"/><path d="M4 21c3-5 7-8 13-11"/>',
-    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-    heart: '<path d="M20.8 5.8c-2-2-5.2-2-7.2 0L12 7.4l-1.6-1.6a5.1 5.1 0 0 0-7.2 7.2L12 21l8.8-8a5.1 5.1 0 0 0 0-7.2Z"/>'
-  };
-  return `<svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7">${paths[name]}</svg>`;
-};
-
 const productContainer = document.querySelector("[data-products]");
-// 首頁只呈現 popular 為 true 的前三項；選購視窗仍會顯示 products 內全部商品。
+// 首頁只呈現 popular 為 true 的前三項；完整選購流程在 shop.html。
 const featuredProducts = products
   .map((product, index) => ({ product, index }))
   .filter(({ product }) => product.popular)
@@ -98,7 +89,6 @@ document.querySelector("[data-gallery]").innerHTML = galleryItems.map((item, ind
 
 const modal = document.querySelector("[data-modal]");
 const modalContent = document.querySelector("[data-modal-content]");
-let selectedProducts = new Set();
 let albumIndex = 0;
 let currentAlbum = null;
 
@@ -114,15 +104,6 @@ function closeModal() {
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
-}
-
-function productShop() {
-  currentAlbum = null;
-  openModal(`<header class="modal-header"><p class="eyebrow">PRODUCT CATALOG</p><h2 id="modal-title">選擇你喜歡的產品</h2><p>快速查看特色並勾選有興趣的商品，之後可將選擇內容提供給我們詢問。</p></header>
-    <div class="shop-list">${products.map((product, index) => `
-      <article class="shop-item"><img src="${product.image}" alt="${product.name}"><div><h3>${product.name}</h3><p>${product.subtitle}</p><div class="feature-list">${product.features.map((feature, i) => `<span>${icon(["leaf","clock","heart"][i % 3])}${feature}</span>`).join("")}</div></div>
-      <div class="shop-actions"><strong>${product.price}</strong><button class="select-product ${selectedProducts.has(index) ? "selected" : ""}" data-select-product="${index}">${selectedProducts.has(index) ? "✓ 已選擇" : "＋ 選擇"}</button></div></article>`).join("")}</div>
-    <div class="selection-summary" data-selection-summary>已選擇 ${selectedProducts.size} 項產品</div>`);
 }
 
 function showNews(index) {
@@ -145,21 +126,14 @@ function showAlbum(index) {
   openModal(albumMarkup());
 }
 
-document.querySelector("[data-open-products]").addEventListener("click", productShop);
-document.querySelectorAll("[data-product-index]").forEach(card => card.addEventListener("click", productShop));
+document.querySelectorAll("[data-product-index]").forEach(card => card.addEventListener("click", () => {
+  window.location.href = `shop.html?product=${card.dataset.productIndex}`;
+}));
 document.querySelectorAll("[data-news-index]").forEach(item => item.addEventListener("click", () => showNews(Number(item.dataset.newsIndex))));
 document.querySelectorAll("[data-gallery-index]").forEach(item => item.addEventListener("click", () => showAlbum(Number(item.dataset.galleryIndex))));
 document.querySelectorAll("[data-close-modal]").forEach(button => button.addEventListener("click", closeModal));
 
 modal.addEventListener("click", event => {
-  const selectButton = event.target.closest("[data-select-product]");
-  if (selectButton) {
-    const index = Number(selectButton.dataset.selectProduct);
-    selectedProducts.has(index) ? selectedProducts.delete(index) : selectedProducts.add(index);
-    selectButton.classList.toggle("selected", selectedProducts.has(index));
-    selectButton.textContent = selectedProducts.has(index) ? "✓ 已選擇" : "＋ 選擇";
-    modal.querySelector("[data-selection-summary]").textContent = `已選擇 ${selectedProducts.size} 項產品`;
-  }
   const albumImage = event.target.closest("[data-album-image]");
   if (albumImage) {
     albumIndex = Number(albumImage.dataset.albumImage);
