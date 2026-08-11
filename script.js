@@ -38,24 +38,32 @@ const newsItems = [
 // ===== 可修改內容區：活動相簿 =====
 // images 陣列內可以放入同一場活動的多張照片。
 const galleryItems = [
-  { title: "新洽記品牌足跡", date: "品牌紀錄", images: [
-    "source/produce/produce_2.jpg",
-    "source/produce/produce_1.jpg",
-    "source/photo/photo_2.jpg"
-  ]},
-  { title: "家族傳承記憶", date: "歷史影像", images: [
-    "source/family.png",
-    "source/photo/photo_3.jpg"
-  ]},
-  { title: "從一粒花生開始", date: "產品紀錄", images: [
-    "source/photo/photo_1.jpg",
-    "source/produce/produce_2.jpg"
-  ]},
-  { title: "商行日常風景", date: "日常紀錄", images: [
-    "source/photo/photo_2.jpg",
-    "source/produce/produce_1.jpg",
-    "source/photo/photo_3.jpg"
-  ]}
+  {
+    title: "新洽記品牌足跡", date: "品牌紀錄", images: [
+      "source/produce/produce_2.jpg",
+      "source/produce/produce_1.jpg",
+      "source/photo/photo_2.jpg"
+    ]
+  },
+  {
+    title: "家族傳承記憶", date: "歷史影像", images: [
+      "source/family.png",
+      "source/photo/photo_3.jpg"
+    ]
+  },
+  {
+    title: "從一粒花生開始", date: "產品紀錄", images: [
+      "source/photo/photo_1.jpg",
+      "source/produce/produce_2.jpg"
+    ]
+  },
+  {
+    title: "商行日常風景", date: "日常紀錄", images: [
+      "source/photo/photo_2.jpg",
+      "source/produce/produce_1.jpg",
+      "source/photo/photo_3.jpg"
+    ]
+  }
 ];
 
 const productContainer = document.querySelector("[data-products]");
