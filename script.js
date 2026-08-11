@@ -2,19 +2,29 @@
 // features 是讓顧客快速了解產品的特色標籤；未來可直接增刪。
 const products = [
   {
-    name: "經典原味花生", subtitle: "傳承滋味・嚴選好花生", price: "商品資訊準備中", tag: "經典", popular: true,
-    features: ["嚴選原料", "經典風味", "適合分享"],
+    name: "經典原味花生", subtitle: "單純香氣・越吃越順口", price: "詢問商品資訊", tag: "招牌", popular: true,
+    features: ["嚴選原料", "清爽原味", "日常點心"],
     image: "source/produce/produce_2.jpg"
   },
   {
-    name: "新洽記風味花生", subtitle: "老商行精神・新時代風味", price: "商品資訊準備中", tag: "人氣", popular: true,
-    features: ["獨家風味", "四代傳承", "日常點心"],
+    name: "椒麻花生", subtitle: "香、麻、脆的涮嘴風味", price: "詢問商品資訊", tag: "人氣", popular: true,
+    features: ["香麻調味", "下酒合適", "送禮分享"],
     image: "source/photo/photo_1.jpg"
   },
   {
-    name: "傳承分享禮盒", subtitle: "一份滋味・一份真誠人情", price: "商品資訊準備中", tag: "送禮", popular: true,
+    name: "傳承分享禮盒", subtitle: "一份滋味・一份真誠人情", price: "詢問商品資訊", tag: "送禮", popular: true,
     features: ["精緻包裝", "節慶送禮", "多種風味"],
     image: "source/produce/produce_1.jpg"
+  },
+  {
+    name: "活動分享包", subtitle: "擺攤、會議、聚會都適合", price: "詢問商品資訊", tag: "活動", popular: false,
+    features: ["多人分享", "攜帶方便", "彈性搭配"],
+    image: "source/photo/photo_2.jpg"
+  },
+  {
+    name: "家常小包裝", subtitle: "放在家裡，想吃就開", price: "詢問商品資訊", tag: "日常", popular: false,
+    features: ["小份量", "好保存", "下午茶"],
+    image: "source/photo/photo_3.jpg"
   }
 ];
 
