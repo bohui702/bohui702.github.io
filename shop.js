@@ -1,10 +1,5 @@
-// ========================================
-// Supabase 設定
-// ========================================
-// 請換成你 Supabase Project 的實際值。
-// 前端只能使用 Publishable Key（或 legacy anon key），不要放 service_role / secret key。
-const SUPABASE_URL = "https://rvswrupfkswlvlsleduj.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_n7vI6heyLD4gUR5p8Z9JzQ_nr_R-cFu";
+// Supabase 與商品設定分別集中在 config.js、products.js。
+const { url: SUPABASE_URL, publishableKey: SUPABASE_PUBLISHABLE_KEY } = window.APP_CONFIG.supabase;
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
@@ -12,62 +7,7 @@ const supabaseClient = window.supabase.createClient(
 );
 
 
-// ========================================
-// 商品資料
-// id 必須與 Supabase products.id 完全一致
-// ========================================
-const products = [
-  {
-    id: 1,
-    name: "金鑽紅仁花生",
-    subtitle: "嚴選在地頂級紅仁花生，外皮晶瑩細緻，富含高營養價值，口感加倍甘甜深邃。",
-    price: 180,
-    tag: "頂級焙炒花生",
-    spec: "規格：280g/罐",
-    promos: ["滿 30 罐起 → $170", "滿 50 罐起 → $160"],
-    image: "source/produce/produce_2.jpg"
-  },
-  {
-    id: 2,
-    name: "焙炒椒麻花生",
-    subtitle: "經典香脆焙炒，特選椒麻微辣風味，微麻微辣，佐茶下酒、聚會休閒的絕配良伴。",
-    price: 150,
-    tag: "頂級焙炒花生",
-    spec: "規格：280g/罐",
-    promos: ["滿 30 罐起 → $140", "滿 50 罐起 → $135"],
-    image: "source/produce/produce_2.jpg"
-  },
-  {
-    id: 3,
-    name: "焙炒五香花生",
-    subtitle: "五香濃郁溫潤，顆顆飽滿香脆，遵循古法精心焙炒，保留最純粹的經典花生香氣。",
-    price: 150,
-    tag: "頂級焙炒花生",
-    spec: "規格：280g/罐",
-    promos: ["滿 30 罐起 → $140", "滿 50 罐起 → $135"],
-    image: "source/photo/photo_1.jpg"
-  },
-  {
-    id: 4,
-    name: "手工花生糖",
-    subtitle: "職人純手工精心製作，獨門麥芽糖黃金比例。酥脆濃郁，香醇持久不黏牙，精裝禮盒最宜大器送禮。",
-    price: 200,
-    tag: "手工花生糖",
-    spec: "規格：禮盒14入",
-    promos: ["滿 20 件起 → $180"],
-    image: "source/produce/produce_1.jpg"
-  },
-  {
-    id: 5,
-    name: "家常小包裝",
-    subtitle: "小份量包裝方便保存，適合辦公室、下午茶與日常分享，想吃就開一包。",
-    price: 120,
-    tag: "日常分享",
-    spec: "規格：輕巧包",
-    promos: ["滿 10 包起 → $110"],
-    image: "source/photo/photo_3.jpg"
-  }
-];
+const products = window.PRODUCTS;
 
 const money = value => `NT$${Number(value).toLocaleString("zh-TW")}`;
 
