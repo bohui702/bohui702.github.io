@@ -11,7 +11,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;900&family=Noto+Serif+TC:wght@600;700;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="shop-page">
@@ -22,8 +22,8 @@
 
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="回到新洽記商行首頁">
-      <img src="source/LOGO.jpg" alt="">
-      <span><strong>新洽記商行</strong><small>SIN HIAP KI · 1928</small></span>
+      <img src="images/logo/logo-dark.png" alt="新洽記商行商標">
+      <span><strong>新洽記商行</strong><small>SIN-HIÁP-KÌ · 1928</small></span>
     </a>
     <button class="menu-button" aria-label="開啟選單" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -41,7 +41,8 @@
       <div>
         <p class="eyebrow">ORDER ONLINE · PAY AFTER CONFIRMATION</p>
         <h1>商品選購</h1>
-        <p>選好商品與數量後，填寫聯絡與配送資料。付款方式可選擇銀行轉帳或貨到付款，不會在網站上直接刷卡扣款。</p>
+        <p>用心，挑一份延續百年的精神，<br>融洽的朋友、夥伴分享。</p>
+        <p class="shop-hero-en">The best gifts come from the heart—and peanuts.</p>
       </div>
     </section>
 
@@ -145,27 +146,29 @@
 
   <footer>
     <a class="brand footer-brand" href="index.html">
-      <img src="source/LOGO.jpg" alt="">
-      <span><strong>新洽記商行</strong><small>SIN HIAP KI · 1928</small></span>
+      <img src="images/logo/logo-light.png" alt="新洽記商行商標">
+      <span><strong>新洽記商行</strong><small>SIN-HIÁP-KÌ · 1928</small></span>
     </a>
     <div>
       <h4>聯絡資訊</h4>
-      <a href="mailto:sinhiapki.1928@gmail.com">sinhiapki.1928@gmail.com</a>
-      <a href="https://www.instagram.com/sinhiapki_1928" target="_blank" rel="noopener noreferrer">Instagram</a>
-      <a href="https://www.facebook.com/profile.php?id=61574707400729" target="_blank"
-        rel="noopener noreferrer">Facebook</a>
+      <a data-link="email">sinhiapki.1928@gmail.com</a>
+      <a data-link="instagram" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a data-link="facebook" target="_blank" rel="noopener noreferrer">Facebook</a>
     </div>
     <div>
       <h4>付款提醒</h4>
       <p>不提供網站直接刷卡扣款。</p>
       <p>訂單由人工確認後再付款。</p>
     </div>
-    <p class="copyright">© <span data-year></span> SIN HIAP KI. ALL RIGHTS RESERVED.</p>
+    <p class="copyright">© <span data-year></span> SIN-HIÁP-KÌ. ALL RIGHTS RESERVED.</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="discount.js"></script>
-  <script src="shop.js"></script>
+  <script src="js/content.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/discount.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/shop.js"></script>
 </body>
 
 </html>

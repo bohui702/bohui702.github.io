@@ -5,6 +5,7 @@
 -- discount_rules: product_id, min_quantity, discount_type, discount_value, active, start_at, end_at
 -- orders: order_number, customer_name, phone, title, delivery, address, payment, note, status, total_amount
 -- order_items: order_id, product_name, quantity, unit_price, subtotal
+-- 注意：如果 subtotal 是 generated column，insert 時不可手動寫入 subtotal。
 
 create or replace function public.get_product_price(
   p_product_id bigint,
@@ -156,15 +157,13 @@ begin
       order_id,
       product_name,
       quantity,
-      unit_price,
-      subtotal
+      unit_price
     )
     values (
       v_order_id,
       v_product_name,
       v_quantity,
-      round(v_unit_price)::integer,
-      v_subtotal
+      round(v_unit_price)::integer
     );
 
     v_items_result := v_items_result || jsonb_build_array(

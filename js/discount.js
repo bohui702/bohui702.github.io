@@ -41,14 +41,6 @@ window.discountRules = [
     tiers: [
       { minQuantity: 20, type: "fixed_price", value: 180 }
     ]
-  },
-
-  {
-    productId: 5,
-    enabled: true,
-    tiers: [
-      { minQuantity: 10, type: "fixed_price", value: 110 }
-    ]
   }
 ];
 
