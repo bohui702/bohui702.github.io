@@ -4,90 +4,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="新洽記商行｜始於 1928，四代傳承的花生滋味。">
+  <meta name="description" content="新洽記商行 Sin-hiáp-kì｜始於 1928，四代傳承的國產花生與手工點心。">
   <title>新洽記商行</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;900&family=Noto+Serif+TC:wght@600;700;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+  <!-- ===== 頂部公告 ===== -->
   <div class="announcement">
-    <p>新洽記商行・始於 1928・手作花生與老商行的人情味</p>
+    <p>新洽記商行・始於 1928・經典花生・手工點心</p>
     <button aria-label="關閉公告" data-close-announcement>×</button>
   </div>
 
+  <!-- ===== 頁首：商標 + 選單 ===== -->
   <header class="site-header">
     <a class="brand" href="#top" aria-label="新洽記商行首頁">
-      <img src="source/LOGO.jpg" alt="">
-      <span><strong>新洽記商行</strong><small>SIN HIAP KI · 1928</small></span>
+      <img src="images/logo/logo-dark.png" alt="新洽記商行商標">
+      <span><strong>新洽記商行</strong><small>SIN-HIÁP-KÌ · 1928</small></span>
     </a>
     <button class="menu-button" aria-label="開啟選單" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
     <nav class="site-nav" aria-label="主要導覽">
-      <a href="#kitchen">產品特色</a>
-      <a href="shop.html">商品推薦</a>
-      <a href="#about">感人故事</a>
-      <a href="#news">活動消息</a>
-      <a href="#gallery">相關紀錄</a>
+      <a href="#kitchen">品牌理念</a>
+      <a href="shop.html">商品選購</a>
+      <a href="#about">品牌故事</a>
+      <a href="#news">最新消息</a>
+      <a href="#gallery">活動花絮</a>
       <a class="nav-cta" href="#contact">聯絡我們</a>
     </nav>
   </header>
 
   <main id="top">
+    <!-- ===== 主視覺 ===== -->
     <section class="hero">
-      <img class="hero-bg" src="source/produce/produce_3.jpg" alt="新洽記商行花生商品展示">
+      <img class="hero-bg" src="images/produce/produce_3.jpg" alt="新洽記商行的花生">
       <div class="hero-shade"></div>
       <div class="hero-content reveal">
-        <p class="eyebrow">FRESH PEANUTS · OLD-SCHOOL HEART</p>
+        <p class="eyebrow">SINCE 1928 · TAIWAN PEANUTS</p>
         <h1>新洽記商行</h1>
-        <p>一粒花生，承接四代人的記憶。把近百年的堅持，做成日常也能分享的好滋味。</p>
+        <p class="hero-romanization">Sin-hiáp-kì Siong-hâng</p>
+        <p class="hero-lead">一粒花生，承接四代人的記憶。<br>把近百年的堅持，做成日常也能分享的經典花生。</p>
         <div class="hero-actions">
           <a class="button primary" href="shop.html">查看商品</a>
           <a class="button ghost" href="#about">品牌故事</a>
         </div>
       </div>
-      <div class="hero-card reveal">
-        <b>1928</b>
-        <span>四代傳承</span>
-      </div>
+      <!-- Linktree 連結：網址在 js/content.js 的 siteLinks.linktree -->
+      <a class="hero-card reveal" data-link="linktree" target="_blank" rel="noopener noreferrer"
+        aria-label="開啟新洽記商行 Linktree">
+        <small>所有連結一次看</small>
+        <img src="images/Link_tree.png" alt="新洽記商行 Linktree QR Code">
+        <em class="hero-card-link">Linktree ↗</em>
+      </a>
     </section>
 
+    <!-- ===== 品牌理念：三件事 ===== -->
     <section class="kitchen section" id="kitchen">
       <div class="section-head centered reveal">
-        <p class="eyebrow">INSIDE OUR SHOP</p>
+        <p class="eyebrow">WHAT WE CARE ABOUT</p>
         <h2>我們在意的三件事</h2>
       </div>
       <div class="kitchen-grid">
         <article class="reveal">
-          <img src="source/photo/photo_1.jpg" alt="手中的花生">
+          <img src="images/photo/photo_1.jpg" alt="手中的花生">
           <h3>新鮮原料</h3>
-          <p>挑選適合烘焙與調味的花生，讓香氣、口感與品質維持穩定。</p>
+          <p>嚴選國產花生，挑選適合焙炒與調味的好豆，讓香氣、口感與品質維持穩定。</p>
         </article>
         <article class="reveal">
-          <img src="source/produce/produce_1.jpg" alt="新洽記商行禮盒">
+          <img src="images/produce/produce_1.jpg" alt="新洽記商行禮盒">
           <h3>手作溫度</h3>
           <p>從日常點心到節慶禮盒，保留老商行真誠待人的樸實精神。</p>
         </article>
         <article class="reveal">
-          <img src="source/photo/photo_2.jpg" alt="新洽記活動現場">
+          <img src="images/photo/photo_2.jpg" alt="新洽記活動現場">
           <h3>分享滋味</h3>
           <p>好吃不是華麗，而是讓人想再拿一口，也願意帶給重要的人。</p>
         </article>
       </div>
     </section>
 
+    <!-- ===== 本季熱門商品（內容在 js/products.js，popular: true 的前三項） ===== -->
     <section class="products section" id="products">
       <div class="section-head reveal">
         <div>
           <p class="eyebrow">WHAT'S POPULAR</p>
           <h2>本季熱門商品</h2>
         </div>
-        <p>首頁先放三款熱門品項；完整商品可到選購頁查看、加入購物車並送出訂購資訊。</p>
       </div>
       <div class="product-grid" data-products></div>
       <div class="center">
@@ -95,18 +103,20 @@
       </div>
     </section>
 
+    <!-- ===== 送禮橫幅 ===== -->
     <section class="feature-banner">
-      <img src="source/produce/produce_1.jpg" alt="新洽記商行商品禮盒">
+      <img src="images/produce/produce_1.jpg" alt="新洽記商行商品禮盒">
       <div>
-        <p class="eyebrow">SIGNATURE GIFT BOX</p>
-        <h2>一盒花生，裝著老商行的心意。</h2>
-        <p>適合拜訪、節慶、活動分享，也適合放在家裡，慢慢吃出熟悉的香氣。</p>
+        <p class="eyebrow">SIGNATURE GIFT</p>
+        <h2>一份花生，<br>裝著老商行的心意。</h2>
+        <p>不論是拜訪親友、節慶送禮或活動分享，都適合帶上一份；放在家裡，也能慢慢吃出熟悉的香氣。</p>
       </div>
     </section>
 
+    <!-- ===== 品牌故事 ===== -->
     <section class="intro section" id="about">
       <figure class="heritage-photo reveal">
-        <img src="source/family.png" alt="新洽記商行早期家族與店面合影" loading="lazy">
+        <img src="images/family.png" alt="新洽記商行早期家族與店面合影" loading="lazy">
       </figure>
       <div class="intro-story reveal">
         <p class="eyebrow">OUR STORY</p>
@@ -115,6 +125,7 @@
       </div>
     </section>
 
+    <!-- ===== 最新消息（內容在 js/content.js 的 newsItems） ===== -->
     <section class="news section" id="news">
       <div class="section-head reveal">
         <div>
@@ -125,67 +136,60 @@
       <div class="news-list" data-news></div>
     </section>
 
+    <!-- ===== 活動花絮（內容在 js/content.js 的 galleryItems） ===== -->
     <section class="gallery section" id="gallery">
       <div class="section-head reveal">
         <div>
           <p class="eyebrow">CORNER GALLERY</p>
           <h2>活動花絮</h2>
         </div>
-        <p>每個相簿可先預覽多張照片，點進去再放大查看。</p>
       </div>
       <div class="gallery-grid" data-gallery></div>
     </section>
 
+    <!-- ===== 聯絡我們 ===== -->
     <section class="contact section" id="contact">
       <div class="contact-copy reveal">
         <p class="eyebrow">LOCATION & CONTACT</p>
-        <h2>想了解商品或合作活動，歡迎聯絡我們。</h2>
+        <h2>想了解商品、團購或合作活動，<br>歡迎聯絡我們。</h2>
         <p>也可以追蹤社群，查看最新商品、活動擺攤與品牌日常。</p>
         <div class="contact-links">
-          <a href="mailto:sinhiapki.1928@gmail.com">sinhiapki.1928@gmail.com</a>
-          <a href="https://www.instagram.com/sinhiapki_1928" target="_blank" rel="noopener noreferrer">Instagram</a>
-          <a href="https://www.facebook.com/profile.php?id=61574707400729" target="_blank"
-            rel="noopener noreferrer">Facebook</a>
+          <a data-link="email">sinhiapki.1928@gmail.com</a>
+          <a data-link="instagram" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a data-link="facebook" target="_blank" rel="noopener noreferrer">Facebook</a>
         </div>
       </div>
-      <form class="subscribe-form reveal" data-subscribe-form>
-        <label for="email">訂閱品牌消息</label>
-        <div>
-          <input id="email" type="email" placeholder="hello@example.com" required>
-          <button type="submit">送出</button>
-        </div>
-      </form>
     </section>
   </main>
 
+  <!-- ===== 頁尾 ===== -->
   <footer>
     <a class="brand footer-brand" href="#top">
-      <img src="source/LOGO.jpg" alt="">
-      <span><strong>新洽記商行</strong><small>SIN HIAP KI · 1928</small></span>
+      <img src="images/logo/logo-light.png" alt="新洽記商行商標">
+      <span><strong>新洽記商行</strong><small>SIN-HIÁP-KÌ · 1928</small></span>
     </a>
     <div>
       <h4>快速連結</h4>
-      <a href="shop.html">熱門商品</a>
+      <a href="shop.html">商品選購</a>
       <a href="#news">最新消息</a>
       <a href="#gallery">活動花絮</a>
     </div>
     <div>
       <h4>聯絡資訊</h4>
-      <a href="mailto:sinhiapki.1928@gmail.com">sinhiapki.1928@gmail.com</a>
-      <a href="https://www.instagram.com/sinhiapki_1928" target="_blank" rel="noopener noreferrer">Instagram</a>
-      <a href="https://www.facebook.com/profile.php?id=61574707400729" target="_blank"
-        rel="noopener noreferrer">Facebook</a>
+      <a data-link="email">sinhiapki.1928@gmail.com</a>
+      <a data-link="instagram" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a data-link="facebook" target="_blank" rel="noopener noreferrer">Facebook</a>
     </div>
-    <p class="copyright">© <span data-year></span> SIN HIAP KI. ALL RIGHTS RESERVED.</p>
+    <p class="copyright">© <span data-year></span> SIN-HIÁP-KÌ. ALL RIGHTS RESERVED.</p>
   </footer>
 
+  <!-- 右下角固定的 IG / FB 按鈕 -->
   <aside class="social-rail" aria-label="社群連結">
-    <a href="https://www.instagram.com/sinhiapki_1928" target="_blank" rel="noopener noreferrer"
-      aria-label="追蹤 Instagram">IG</a>
-    <a href="https://www.facebook.com/profile.php?id=61574707400729" target="_blank" rel="noopener noreferrer"
-      aria-label="追蹤 Facebook">FB</a>
+    <a data-link="instagram" target="_blank" rel="noopener noreferrer" aria-label="追蹤 Instagram">IG</a>
+    <a data-link="facebook" target="_blank" rel="noopener noreferrer" aria-label="追蹤 Facebook">FB</a>
   </aside>
 
+  <!-- 彈出視窗（最新消息、相簿共用） -->
   <div class="modal" data-modal aria-hidden="true">
     <div class="modal-backdrop" data-close-modal></div>
     <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -193,7 +197,11 @@
       <div class="modal-content" data-modal-content></div>
     </section>
   </div>
-  <script src="script.js"></script>
+
+  <script src="js/content.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/home.js"></script>
 </body>
 
 </html>

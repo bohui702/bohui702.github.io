@@ -1,70 +1,7 @@
-// ===== 可修改內容區：產品資料 =====
-// features 是讓顧客快速了解產品的特色標籤；未來可直接增刪。
-const products = [
-  {
-    name: "經典原味花生", subtitle: "單純香氣・越吃越順口", price: "詢問商品資訊", tag: "招牌", popular: true,
-    features: ["嚴選原料", "清爽原味", "日常點心"],
-    image: "source/produce/produce_2.jpg"
-  },
-  {
-    name: "椒麻花生", subtitle: "香、麻、脆的涮嘴風味", price: "詢問商品資訊", tag: "人氣", popular: true,
-    features: ["香麻調味", "下酒合適", "送禮分享"],
-    image: "source/photo/photo_1.jpg"
-  },
-  {
-    name: "傳承分享禮盒", subtitle: "一份滋味・一份真誠人情", price: "詢問商品資訊", tag: "送禮", popular: true,
-    features: ["精緻包裝", "節慶送禮", "多種風味"],
-    image: "source/produce/produce_1.jpg"
-  },
-  {
-    name: "活動分享包", subtitle: "擺攤、會議、聚會都適合", price: "詢問商品資訊", tag: "活動", popular: false,
-    features: ["多人分享", "攜帶方便", "彈性搭配"],
-    image: "source/photo/photo_2.jpg"
-  },
-  {
-    name: "家常小包裝", subtitle: "放在家裡，想吃就開", price: "詢問商品資訊", tag: "日常", popular: false,
-    features: ["小份量", "好保存", "下午茶"],
-    image: "source/photo/photo_3.jpg"
-  }
-];
-
-// ===== 可修改內容區：最新消息 =====
-const newsItems = [
-  { date: "2026.04.18", category: "品牌消息", title: "新洽記商行品牌網站正式上線", detail: "我們把近百年的家族記憶與新洽記的品牌精神，整理進這個全新的網站。未來將在這裡分享商品資訊、活動消息，以及每一份滋味背後的故事。" },
-  { date: "2026.03.26", category: "期間活動", title: "近期活動消息與參與方式，敬請期待", detail: "新洽記商行正在籌備更多能與大家見面的活動。活動日期、地點與參加方式確認後，將於網站與社群平台同步公布。" },
-  { date: "2026.03.02", category: "品牌故事", title: "花生殼上的紋路：一個家族近百年的四代回憶", detail: "花生殼上的紋路是脈絡，也是承接一個家族將近百年的四代回憶。我們希望找回曾祖父創立商行時，對品質的堅持與信心，以及樂善好施的人情味。" }
-];
-
-// ===== 可修改內容區：活動相簿 =====
-// images 陣列內可以放入同一場活動的多張照片。
-const galleryItems = [
-  {
-    title: "新洽記品牌足跡", date: "品牌紀錄", images: [
-      "source/produce/produce_2.jpg",
-      "source/produce/produce_1.jpg",
-      "source/photo/photo_2.jpg"
-    ]
-  },
-  {
-    title: "家族傳承記憶", date: "歷史影像", images: [
-      "source/family.png",
-      "source/photo/photo_3.jpg"
-    ]
-  },
-  {
-    title: "從一粒花生開始", date: "產品紀錄", images: [
-      "source/photo/photo_1.jpg",
-      "source/produce/produce_2.jpg"
-    ]
-  },
-  {
-    title: "商行日常風景", date: "日常紀錄", images: [
-      "source/photo/photo_2.jpg",
-      "source/produce/produce_1.jpg",
-      "source/photo/photo_3.jpg"
-    ]
-  }
-];
+// ========================================
+// 首頁程式（一般不需要修改）
+// 文字、消息、相簿請改 js/content.js；商品請改 js/products.js
+// ========================================
 
 const productContainer = document.querySelector("[data-products]");
 // 首頁只呈現 popular 為 true 的前三項；完整選購流程在 shop.html。
@@ -77,7 +14,7 @@ productContainer.innerHTML = featuredProducts.map(({ product, index }) => `
   <article class="product-card reveal" tabindex="0" data-product-index="${index}">
     <div class="product-image"><img src="${product.image}" alt="${product.name}" loading="lazy"></div>
     <span class="product-tag">${product.tag}</span>
-    <div class="product-info"><div><h3>${product.name}</h3><p>${product.subtitle}</p></div><span class="product-price">${product.price}</span></div>
+    <div class="product-info"><div><h3>${product.name}</h3><p>${product.short || product.subtitle}</p></div><span class="product-price">${money(product.price)}</span></div>
   </article>
 `).join("");
 
@@ -134,9 +71,11 @@ function showAlbum(index) {
   openModal(albumMarkup());
 }
 
-document.querySelectorAll("[data-product-index]").forEach(card => card.addEventListener("click", () => {
-  window.location.href = `shop.html?product=${card.dataset.productIndex}`;
-}));
+document.querySelectorAll("[data-product-index]").forEach(card => {
+  const goToShop = () => { window.location.href = `shop.html?product=${card.dataset.productIndex}`; };
+  card.addEventListener("click", goToShop);
+  card.addEventListener("keydown", event => { if (event.key === "Enter") goToShop(); });
+});
 document.querySelectorAll("[data-news-index]").forEach(item => item.addEventListener("click", () => showNews(Number(item.dataset.newsIndex))));
 document.querySelectorAll("[data-gallery-index]").forEach(item => item.addEventListener("click", () => showAlbum(Number(item.dataset.galleryIndex))));
 document.querySelectorAll("[data-close-modal]").forEach(button => button.addEventListener("click", closeModal));
@@ -164,22 +103,6 @@ document.addEventListener("keydown", event => {
     albumIndex = (albumIndex + (event.key === "ArrowRight" ? 1 : -1) + currentAlbum.images.length) % currentAlbum.images.length;
     modalContent.innerHTML = albumViewerMarkup();
   }
-});
-
-const menuButton = document.querySelector(".menu-button");
-const navigation = document.querySelector(".site-nav");
-menuButton.addEventListener("click", () => {
-  const isOpen = navigation.classList.toggle("open");
-  menuButton.setAttribute("aria-expanded", isOpen);
-});
-navigation.querySelectorAll("a").forEach(link => link.addEventListener("click", () => navigation.classList.remove("open")));
-document.querySelector("[data-close-announcement]").addEventListener("click", event => event.currentTarget.parentElement.remove());
-document.querySelector("[data-year]").textContent = new Date().getFullYear();
-
-document.querySelector("[data-subscribe-form]").addEventListener("submit", event => {
-  event.preventDefault();
-  event.currentTarget.classList.add("success");
-  event.currentTarget.reset();
 });
 
 const observer = new IntersectionObserver(entries => {
