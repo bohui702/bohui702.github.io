@@ -80,6 +80,24 @@
 .admin-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
 .admin-toolbar input { flex: 1 1 240px; }
 .admin-sync { margin: 8px 0 14px; color: var(--muted); font-size: 13px; }
+.admin-sync [data-result-count] { color: var(--ink); font-weight: 900; }
+
+/* ===== 排序與篩選 ===== */
+.admin-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 10px; margin-top: 12px; }
+.admin-filters label { display: grid; gap: 2px; color: var(--muted); font-size: 13px; font-weight: 700; }
+.admin-filters select {
+  min-height: 40px;
+  padding: 6px 30px 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+}
+.admin-filters select.active { border-color: #9b5f24; background: #fff3e0; color: #7d4a16; }
+.admin-filters .admin-link { min-height: 40px; color: var(--red); }
 
 /* ===== 訂單卡片 ===== */
 .order-list { display: grid; gap: 14px; }
@@ -163,6 +181,9 @@
 @media (max-width: 700px) {
   .admin-page .site-header small { display: none; }
   .order-body, .order-staff { grid-template-columns: 1fr; }
+  .admin-filters { display: grid; grid-template-columns: 1fr 1fr; }
+  .admin-filters label:first-child { grid-column: 1 / -1; }
+  .admin-filters select { width: 100%; }
   .order-actions .button { width: 100%; }
   .order-more { margin-left: 0; }
 }

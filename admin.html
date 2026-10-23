@@ -49,7 +49,17 @@
       <button type="button" class="admin-link" data-refresh>重新整理</button>
       <button type="button" class="admin-link" data-enable-notify hidden>開啟新訂單通知</button>
     </div>
-    <p class="admin-sync" data-sync></p>
+
+    <!-- 排序與篩選：選項在 js/admin.js 的 FILTERS / SORTS -->
+    <div class="admin-filters" data-filters>
+      <label>排序<select data-sort></select></label>
+      <label>收款<select data-filter="paid"></select></label>
+      <label>處理人<select data-filter="handler"></select></label>
+      <label>配送方式<select data-filter="delivery"></select></label>
+      <label>付款方式<select data-filter="payment"></select></label>
+      <button type="button" class="admin-link" data-clear-filters hidden>清除篩選</button>
+    </div>
+    <p class="admin-sync"><span data-result-count></span><span data-sync></span></p>
 
     <div class="order-list" data-order-list></div>
   </main>

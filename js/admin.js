@@ -14,6 +14,38 @@ const STATUSES = [
 const statusOf = key => STATUSES.find(status => status.key === key) || STATUSES[0];
 const previousStatus = { confirmed: "new", shipped: "confirmed", done: "shipped" };
 
+// 分頁：「未完成」= 新訂單 + 待出貨 + 已出貨
+const OPEN_STATUSES = ["new", "confirmed", "shipped"];
+const TABS = [
+  { key: "open", label: "未完成", match: order => OPEN_STATUSES.includes(order.status) },
+  ...STATUSES.map(status => ({ key: status.key, label: status.label, match: order => order.status === status.key })),
+  { key: "all", label: "全部", match: () => true }
+];
+const tabOf = key => TABS.find(tab => tab.key === key) || TABS[0];
+
+// 排序方式
+const SORTS = [
+  { key: "newest",     label: "最新下單在前", compare: (a, b) => new Date(b.created_at) - new Date(a.created_at) },
+  { key: "oldest",     label: "最早下單在前", compare: (a, b) => new Date(a.created_at) - new Date(b.created_at) },
+  { key: "number-desc", label: "訂單編號（大 → 小）", compare: (a, b) => String(b.order_number).localeCompare(String(a.order_number)) },
+  { key: "number-asc",  label: "訂單編號（小 → 大）", compare: (a, b) => String(a.order_number).localeCompare(String(b.order_number)) },
+  { key: "updated",    label: "最近更新在前", compare: (a, b) => new Date(b.updated_at) - new Date(a.updated_at) }
+];
+
+// 篩選：options 是固定選項；沒有 options 的會依照現有訂單自動產生（例如配送方式）
+const FILTERS = {
+  paid: {
+    options: [["unpaid", "尚未收款"], ["paid", "已收款"]],
+    match: (order, value) => (value === "paid") === Boolean(order.is_paid)
+  },
+  handler: {
+    options: [["mine", "我處理的"], ["none", "尚無人處理"]],
+    match: (order, value) => value === "mine" ? order.handled_by === staffName : !order.handled_by
+  },
+  delivery: { field: "delivery", match: (order, value) => order.delivery === value },
+  payment:  { field: "payment",  match: (order, value) => order.payment === value }
+};
+
 const loginView = document.querySelector("[data-login-view]");
 const ordersView = document.querySelector("[data-orders-view]");
 const loginForm = document.querySelector("[data-login-form]");
@@ -25,6 +57,10 @@ const searchInput = document.querySelector("[data-search]");
 const syncText = document.querySelector("[data-sync]");
 const notifyButton = document.querySelector("[data-enable-notify]");
 const toast = document.querySelector("[data-toast]");
+const sortSelect = document.querySelector("[data-sort]");
+const filterSelects = [...document.querySelectorAll("[data-filter]")];
+const clearFiltersButton = document.querySelector("[data-clear-filters]");
+const resultCount = document.querySelector("[data-result-count]");
 
 let staffName = "";
 let orders = [];
@@ -32,6 +68,12 @@ let itemsByOrder = new Map();
 let currentTab = null;
 let realtimeChannel = null;
 let pollTimer = null;
+
+// 記住每個人上次選的排序與篩選（只存在自己的瀏覽器）
+const VIEW_KEY = "sinhiapki-admin-view";
+let view = { sort: "newest", filters: {} };
+try { view = { ...view, ...JSON.parse(localStorage.getItem(VIEW_KEY) || "{}") }; } catch { /* 無法讀取就用預設 */ }
+const saveView = () => { try { localStorage.setItem(VIEW_KEY, JSON.stringify(view)); } catch { /* 忽略 */ } };
 
 
 // ===== 小工具 =====
@@ -145,7 +187,7 @@ async function loadOrders() {
   }
 
   // 第一次進來：有新訂單就先看新訂單，否則看待出貨
-  if (!currentTab) currentTab = countOf("new") ? "new" : "confirmed";
+  if (!currentTab) currentTab = countOf("new") ? "new" : "open";
 
   syncText.textContent = `最後更新：${formatTime(new Date())}・新訂單會自動出現`;
   renderWhenIdle();
@@ -168,28 +210,56 @@ const countOf = key => orders.filter(order => order.status === key).length;
 
 
 // ===== 畫面 =====
+function renderControls() {
+  sortSelect.innerHTML = SORTS.map(sort => `<option value="${sort.key}">${sort.label}</option>`).join("");
+  sortSelect.value = SORTS.some(sort => sort.key === view.sort) ? view.sort : "newest";
+
+  filterSelects.forEach(select => {
+    const filter = FILTERS[select.dataset.filter];
+    const options = filter.options || [...new Set(orders.map(order => order[filter.field]).filter(Boolean))]
+      .sort().map(value => [value, value]);
+    const current = view.filters[select.dataset.filter] || "";
+    select.innerHTML = `<option value="">全部</option>` + options
+      .map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join("");
+    // 選過的值暫時沒有訂單時，仍保留在選單裡
+    if (current && !options.some(([value]) => value === current)) {
+      select.insertAdjacentHTML("beforeend", `<option value="${escapeHtml(current)}">${escapeHtml(current)}</option>`);
+    }
+    select.value = current;
+    select.classList.toggle("active", Boolean(current));
+  });
+
+  clearFiltersButton.hidden = !Object.values(view.filters).some(Boolean);
+}
+
 function render() {
   const newCount = countOf("new");
   document.title = newCount ? `(${newCount}) 新訂單｜新洽記商行` : "訂單管理｜新洽記商行";
 
-  tabs.innerHTML = [...STATUSES, { key: "all", label: "全部" }].map(status => {
-    const count = status.key === "all" ? orders.length : countOf(status.key);
-    return `<button type="button" class="status-tab ${status.key === currentTab ? "active" : ""} ${status.key === "new" && count ? "has-new" : ""}" data-tab="${status.key}">
-      ${status.label}<b>${count}</b></button>`;
+  tabs.innerHTML = TABS.map(tab => {
+    const count = orders.filter(tab.match).length;
+    return `<button type="button" class="status-tab ${tab.key === currentTab ? "active" : ""} ${tab.key === "new" && count ? "has-new" : ""}" data-tab="${tab.key}">
+      ${tab.label}<b>${count}</b></button>`;
   }).join("");
 
-  const query = searchInput.value.trim().toLowerCase();
-  const visible = orders.filter(order => {
-    if (query) {
-      return [order.customer_name, order.phone, order.order_number]
-        .some(value => String(value || "").toLowerCase().includes(query));
-    }
-    return currentTab === "all" || order.status === currentTab;
-  });
+  renderControls();
 
-  list.innerHTML = visible.length
-    ? visible.map(orderCard).join("")
-    : `<p class="order-empty">${query ? "找不到符合的訂單。" : `目前沒有「${currentTab === "all" ? "任何" : statusOf(currentTab).label}」訂單。`}</p>`;
+  // 有輸入搜尋時搜尋全部訂單；篩選條件一律套用
+  const query = searchInput.value.trim().toLowerCase();
+  const activeFilters = Object.entries(view.filters).filter(([, value]) => value);
+  const visible = orders
+    .filter(order => query
+      ? [order.customer_name, order.phone, order.order_number].some(value => String(value || "").toLowerCase().includes(query))
+      : tabOf(currentTab).match(order))
+    .filter(order => activeFilters.every(([key, value]) => FILTERS[key].match(order, value)))
+    .sort((SORTS.find(sort => sort.key === view.sort) || SORTS[0]).compare);
+
+  resultCount.textContent = `顯示 ${visible.length} 筆・`;
+
+  const emptyText = query ? "找不到符合的訂單。"
+    : activeFilters.length ? "沒有符合篩選條件的訂單。"
+    : `目前沒有「${tabOf(currentTab).label}」訂單。`;
+  list.innerHTML = visible.length ? visible.map(orderCard).join("") : `<p class="order-empty">${emptyText}</p>`;
 }
 
 function orderCard(order) {
@@ -286,6 +356,24 @@ tabs.addEventListener("click", event => {
 });
 
 searchInput.addEventListener("input", render);
+
+sortSelect.addEventListener("change", () => {
+  view.sort = sortSelect.value;
+  saveView();
+  render();
+});
+
+filterSelects.forEach(select => select.addEventListener("change", () => {
+  view.filters[select.dataset.filter] = select.value;
+  saveView();
+  render();
+}));
+
+clearFiltersButton.addEventListener("click", () => {
+  view.filters = {};
+  saveView();
+  render();
+});
 document.querySelector("[data-refresh]").addEventListener("click", loadOrders);
 
 list.addEventListener("click", event => {
