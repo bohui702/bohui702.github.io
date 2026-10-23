@@ -1,17 +1,4 @@
-// ========================================
-// Supabase 設定
-// ========================================
-// 請換成你 Supabase Project 的實際值。
-// 前端只能使用 Publishable Key（或 legacy anon key），不要放 service_role / secret key。
-const SUPABASE_URL = "https://rvswrupfkswlvlsleduj.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_n7vI6heyLD4gUR5p8Z9JzQ_nr_R-cFu";
-
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
-
-
+// Supabase 連線設定在 js/supabase.js。
 // 商品資料在 js/products.js（首頁與選購頁共用）。
 
 const cart = new Map();

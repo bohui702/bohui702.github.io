@@ -1,0 +1,37 @@
+# ========================================
+# Supabase 保持清醒
+# ========================================
+# Supabase 免費方案連續 7 天沒有使用會自動暫停，顧客就無法下單。
+# 這個排程每週一、四自動向 Supabase 查詢一次商品價格，讓專案一直保持「有在使用」。
+#
+# 網址與金鑰直接讀取 js/supabase.js，改那邊這裡就會跟著用新的。
+# 手動測試：GitHub repo → Actions → Supabase 保持清醒 → Run workflow
+# 如果執行失敗，GitHub 會寄信通知你，通常代表專案已經被暫停，請到 Supabase 後台恢復。
+
+name: Supabase 保持清醒
+
+on:
+  schedule:
+    - cron: "0 1 * * 1,4" # 每週一、四 台灣時間早上 9 點（GitHub 用 UTC 時間）
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 查詢 Supabase
+        run: |
+          URL=$(grep -oP 'SUPABASE_URL = "\K[^"]+' js/supabase.js)
+          KEY=$(grep -oP 'SUPABASE_PUBLISHABLE_KEY = "\K[^"]+' js/supabase.js)
+
+          # 呼叫網站本來就有開放的 get_product_price，會實際查詢資料庫
+          curl --fail-with-body --silent --show-error --retry 3 --retry-delay 20 \
+            -X POST "$URL/rest/v1/rpc/get_product_price" \
+            -H "apikey: $KEY" \
+            -H "Authorization: Bearer $KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"p_product_id": 1, "p_quantity": 1}'
+          echo
+          echo "Supabase 正常運作中"

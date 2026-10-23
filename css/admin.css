@@ -1,0 +1,168 @@
+/* 新洽記商行｜訂單管理後台（admin.html）
+   顏色與字體沿用 css/style.css 的設定。 */
+
+.admin-page { background: #fff7ec; font-size: 16px; }
+.admin-page [hidden] { display: none !important; }
+.admin-page .site-header { height: 76px; }
+.admin-page .brand img { height: 52px; }
+.admin-user { display: flex; align-items: center; gap: 14px; font-weight: 700; }
+.admin-link {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+}
+.admin-link:hover { border-color: var(--ink); }
+.admin-link.danger { color: var(--red); }
+.admin-link.danger:hover { border-color: var(--red); }
+
+/* ===== 登入 ===== */
+.admin-login { display: grid; place-items: center; min-height: calc(100vh - 76px); padding: 24px 16px; }
+.admin-login-card {
+  width: min(400px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 28px;
+  background: var(--white);
+  border: 1px solid rgba(205, 167, 134, 0.5);
+  border-radius: 18px;
+}
+.admin-login-card h1 { font-size: 30px; }
+.admin-login-card p { margin: 0; color: var(--muted); }
+.admin-login-card label, .order-staff label { display: grid; gap: 4px; font-size: 14px; font-weight: 700; color: var(--muted); }
+.admin-page input[type="email"],
+.admin-page input[type="password"],
+.admin-page input[type="text"],
+.admin-page input[type="search"] {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 16px;
+}
+.admin-error { color: var(--red) !important; font-weight: 700; }
+
+/* ===== 狀態分頁 ===== */
+.admin-main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 60px; }
+.status-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.status-tab {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid rgba(205, 167, 134, 0.6);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--ink);
+  font-weight: 900;
+}
+.status-tab b {
+  min-width: 26px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--cream);
+  font-size: 14px;
+  text-align: center;
+}
+.status-tab.has-new b { background: var(--red); color: var(--white); }
+.status-tab.active { background: var(--ink); border-color: var(--ink); color: var(--white); }
+.status-tab.active b { background: rgba(255, 255, 255, 0.2); color: var(--white); }
+.status-tab.active.has-new b { background: var(--red); }
+
+.admin-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
+.admin-toolbar input { flex: 1 1 240px; }
+.admin-sync { margin: 8px 0 14px; color: var(--muted); font-size: 13px; }
+
+/* ===== 訂單卡片 ===== */
+.order-list { display: grid; gap: 14px; }
+.order-empty { padding: 40px 0; color: var(--muted); text-align: center; }
+.order-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  background: var(--white);
+  border: 1px solid rgba(205, 167, 134, 0.5);
+  border-left: 6px solid var(--primary);
+  border-radius: 14px;
+}
+.order-card.status-new { border-left-color: var(--red); box-shadow: 0 6px 18px rgba(168, 50, 37, 0.1); }
+.order-card.status-confirmed { border-left-color: #d89b2b; }
+.order-card.status-shipped { border-left-color: #3f7d5a; }
+.order-card.status-done { border-left-color: var(--line); opacity: 0.85; }
+.order-card.status-cancelled { border-left-color: var(--line); opacity: 0.6; }
+
+.order-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.order-head strong { font-size: 15px; letter-spacing: 0.02em; }
+.order-head time { margin-left: auto; color: var(--muted); font-size: 14px; }
+.status-badge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--cream);
+  font-size: 14px;
+  font-weight: 900;
+}
+.status-new .status-badge { background: var(--red); color: var(--white); }
+.status-confirmed .status-badge { background: #fbe7bf; color: #7a4d06; }
+.status-shipped .status-badge { background: #dcefe3; color: #24573a; }
+
+.order-body { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 18px; }
+.order-customer h3 { font-family: var(--font-sans); font-size: 20px; font-weight: 900; }
+.order-customer a { color: #9b5f24; font-weight: 900; }
+.order-customer p { margin: 2px 0 0; line-height: 1.6; }
+.customer-note { padding: 6px 10px; background: #fffdf2; border-radius: 8px; }
+.paid { color: #24573a; font-weight: 900; }
+.unpaid { color: var(--red); font-weight: 900; }
+
+.order-items ul { margin: 0; padding: 0; list-style: none; }
+.order-items li, .order-total { display: flex; justify-content: space-between; gap: 12px; }
+.order-items li { padding: 4px 0; border-bottom: 1px dashed var(--line); }
+.order-total { margin: 8px 0 0; font-weight: 900; }
+.order-total strong { color: var(--red); font-size: 20px; }
+
+.order-staff {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr auto;
+  align-items: end;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.order-staff .admin-link { min-height: 44px; }
+
+.order-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.order-actions .button { min-height: 46px; padding: 8px 20px; }
+.paid-toggle { display: inline-flex; align-items: center; gap: 6px; font-weight: 900; cursor: pointer; }
+.paid-toggle input { width: 20px; height: 20px; accent-color: #3f7d5a; }
+.order-meta { color: var(--muted); font-size: 14px; }
+.order-more { display: flex; gap: 8px; margin-left: auto; }
+.order-history { margin: 0; color: var(--muted); font-size: 13px; }
+
+.admin-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 60;
+  max-width: calc(100% - 32px);
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--white);
+  font-weight: 700;
+  transform: translateX(-50%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 700px) {
+  .admin-page .site-header small { display: none; }
+  .order-body, .order-staff { grid-template-columns: 1fr; }
+  .order-actions .button { width: 100%; }
+  .order-more { margin-left: 0; }
+}

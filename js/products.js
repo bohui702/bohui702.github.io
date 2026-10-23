@@ -28,7 +28,7 @@ const products = [
     shelf: "3 個月",
     promos: ["滿 30 罐起 → $140", "滿 50 罐起 → $135"],
     popular: true,
-    image: "images/shop/roasted-peanuts.jpg"
+    image: "images/shop/Roasted Five-Spice Peanuts.JPG"
   },
   {
     id: 2,
@@ -41,7 +41,7 @@ const products = [
     shelf: "3 個月",
     promos: ["滿 30 罐起 → $140", "滿 50 罐起 → $135"],
     popular: true,
-    image: "images/shop/roasted-peanuts.jpg"
+    image: "images/shop/Roasted Peanuts with Sichuan Peppercorn and Chili.JPG"
   },
   {
     id: 1,
@@ -54,7 +54,7 @@ const products = [
     shelf: "3 個月",
     promos: ["滿 30 罐起 → $170", "滿 50 罐起 → $160"],
     popular: true,
-    image: "images/shop/roasted-peanuts.jpg"
+    image: "images/shop/Roasted and Stir-fried Golden Diamond Red-Skinned Peanuts.JPG"
   },
   {
     id: 6,

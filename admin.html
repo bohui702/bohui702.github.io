@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>訂單管理｜新洽記商行</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;900&family=Noto+Serif+TC:wght@600;700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<!-- 訂單管理後台：只有在 Supabase staff 名單裡的帳號能看到訂單。設定方式見 supabase/admin_setup.sql -->
+<body class="admin-page">
+  <header class="site-header">
+    <a class="brand" href="admin.html">
+      <img src="images/logo/logo-dark.png" alt="新洽記商行商標">
+      <span><strong>訂單管理</strong><small>SIN-HIÁP-KÌ · ORDERS</small></span>
+    </a>
+    <div class="admin-user" data-user-bar hidden>
+      <span data-user-name></span>
+      <button type="button" class="admin-link" data-logout>登出</button>
+    </div>
+  </header>
+
+  <!-- 登入 -->
+  <main class="admin-login" data-login-view hidden>
+    <form class="admin-login-card" data-login-form>
+      <h1>訂單管理登入</h1>
+      <p>請使用店家提供的帳號登入。</p>
+      <label>Email<input name="email" type="email" autocomplete="username" required></label>
+      <label>密碼<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="button primary" type="submit">登入</button>
+      <p class="admin-error" data-login-error></p>
+    </form>
+  </main>
+
+  <!-- 訂單列表 -->
+  <main class="admin-main" data-orders-view hidden>
+    <nav class="status-tabs" data-tabs aria-label="訂單狀態"></nav>
+
+    <div class="admin-toolbar">
+      <input type="search" placeholder="搜尋姓名、電話或訂單編號" data-search aria-label="搜尋訂單">
+      <button type="button" class="admin-link" data-refresh>重新整理</button>
+      <button type="button" class="admin-link" data-enable-notify hidden>開啟新訂單通知</button>
+    </div>
+    <p class="admin-sync" data-sync></p>
+
+    <div class="order-list" data-order-list></div>
+  </main>
+
+  <div class="admin-toast" data-toast hidden></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+
+</html>
