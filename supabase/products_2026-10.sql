@@ -9,7 +9,7 @@
 update public.products set name = '焙炒金鑽紅仁花生' where id = 1;
 update public.products set name = '焙炒椒麻花生'     where id = 2;
 update public.products set name = '焙炒五香花生'     where id = 3;
-update public.products set name = '手工花生糖禮盒'   where id = 4;
+update public.products set name = '手工花生糖'   where id = 4;
 
 -- 舊的「家常小包裝」下架
 update public.products set is_active = false where id = 5;
