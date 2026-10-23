@@ -351,13 +351,21 @@ h3 { font-size: 28px; }
    11. 首頁｜活動花絮
    ======================================== */
 .gallery { background: var(--cream); }
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+/* 左右滑動的相簿輪播：最後一本的下一本會回到第一本
+   --per-view 是一次顯示幾本（平板、手機在下方 18、19 區調整） */
+.gallery-carousel { --per-view: 3; --gap: 16px; position: relative; }
+.gallery-viewport { overflow: hidden; touch-action: pan-y; cursor: grab; }
+.gallery-viewport.dragging { cursor: grabbing; }
+.gallery-track {
+  display: flex;
+  gap: var(--gap);
+  transition: transform 0.45s ease;
+  will-change: transform;
 }
+.gallery-track.no-anim { transition: none; }
 .gallery-item {
   position: relative;
+  flex: 0 0 calc((100% - var(--gap) * (var(--per-view) - 1)) / var(--per-view));
   overflow: hidden;
   padding: 0;
   border: 1px solid var(--line);
@@ -366,17 +374,16 @@ h3 { font-size: 28px; }
   text-align: left;
   box-shadow: 0 10px 26px rgba(42, 33, 28, 0.06);
 }
-.gallery-item:first-child { grid-column: auto; }
 .gallery-item img {
   height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  opacity: 1;
   transition: transform 0.35s ease;
+  -webkit-user-drag: none;
+  user-select: none;
 }
 .gallery-item:hover img { transform: scale(1.04); }
 .gallery-caption {
-  position: static;
   display: block;
   min-height: 78px;
   padding: 14px 16px 16px;
@@ -384,17 +391,66 @@ h3 { font-size: 28px; }
   font-size: 23px;
   font-weight: 900;
   line-height: 1.35;
-  text-shadow: none;
 }
+.gallery-caption small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+}
+.gallery-number,
 .gallery-count {
   position: absolute;
   top: 14px;
-  right: 14px;
   padding: 5px 10px;
-  background: var(--red);
+  color: var(--white);
   font-size: 15px;
   font-weight: 900;
 }
+.gallery-number { left: 14px; background: var(--ink); font-family: var(--font-serif); letter-spacing: 0.04em; }
+.gallery-count { right: 14px; background: var(--red); }
+
+/* 左右箭頭 */
+.gallery-nav {
+  position: absolute;
+  top: calc(var(--photo-height, 220px) / 2);
+  z-index: 2;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 30px;
+  line-height: 1;
+  box-shadow: 0 8px 20px rgba(42, 33, 28, 0.2);
+  transform: translateY(-50%);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.gallery-nav:hover { background: var(--ink); color: var(--white); }
+.gallery-nav.prev { left: -20px; }
+.gallery-nav.next { right: -20px; }
+
+/* 下方編號 */
+.gallery-pager { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 14px; margin-top: 20px; }
+.gallery-counter { font-family: var(--font-serif); font-size: 18px; font-weight: 900; letter-spacing: 0.06em; }
+.gallery-dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.gallery-dots button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(42, 33, 28, 0.25);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 900;
+}
+.gallery-dots button:hover { border-color: var(--ink); }
+.gallery-dots button.active { background: var(--ink); border-color: var(--ink); color: var(--white); }
 
 
 /* ========================================
@@ -876,8 +932,9 @@ footer a { display: block; margin: 5px 0; }
   .hero-card img { display: none; }
   .hero-card .hero-card-link { margin: 0; padding: 0 0 0 10px; border-top: 0; border-left: 1px solid rgba(42, 33, 28, 0.3); }
   .kitchen-grid, .product-grid, .intro, .feature-banner, .contact, footer { grid-template-columns: 1fr; }
-  .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .gallery-item:first-child { grid-column: auto; }
+  .gallery-carousel { --per-view: 2; }
+  .gallery-nav.prev { left: -12px; }
+  .gallery-nav.next { right: -12px; }
   .feature-banner img { min-height: 320px; }
   .shop-flow { grid-template-columns: repeat(2, 1fr); }
   .catalog-grid { grid-template-columns: repeat(2, minmax(230px, 1fr)); }
@@ -913,29 +970,13 @@ footer a { display: block; margin: 5px 0; }
   .news-item span:last-child { grid-column: 2; grid-row: 1 / 4; }
   .news-item time, .news-category { font-size: 17px; }
   .news-item h3 { font-size: 22px; }
-  .gallery-grid { grid-template-columns: 1fr; gap: 12px; }
-  .gallery-item {
-    display: grid;
-    grid-template-columns: 116px 1fr;
-    min-height: 116px;
-  }
-  .gallery-item img {
-    height: 100%;
-    aspect-ratio: auto;
-  }
-  .gallery-caption {
-    min-height: 0;
-    display: grid;
-    align-content: center;
-    padding: 12px 14px;
-    font-size: 21px;
-  }
-  .gallery-count {
-    top: 8px;
-    right: auto;
-    left: 8px;
-    font-size: 12px;
-  }
+  /* 手機一次一本，露出下一本的邊緣，提示可以左右滑 */
+  .gallery-carousel { --per-view: 1; --gap: 12px; }
+  .gallery-item { flex-basis: 86%; }
+  .gallery-caption { min-height: 0; font-size: 21px; }
+  .gallery-nav { width: 42px; height: 42px; font-size: 24px; }
+  .gallery-nav.prev { left: 6px; }
+  .gallery-nav.next { right: 6px; }
   .modal-panel { inset: 0; padding: 18px; }
   .album-overview { grid-template-columns: repeat(2, 1fr); }
   .shop-hero { padding: 52px 20px; }

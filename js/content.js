@@ -26,32 +26,14 @@ const newsItems = [
 
 
 // ===== 活動花絮（相簿） =====
-// 每一個 { } 是一本相簿；images 放同一場活動的多張照片，第一張會當封面。
+// 每一個 { } 是一本相簿；images 放同一場活動的多張照片，第一張會當封面。最新的放最上面。
+// 照片放在 images/gallery/ 資料夾（原始照片在 images/active/，不會上傳到 GitHub）。
+const gallery = (folder, numbers) => numbers.map(n => `images/gallery/${folder}/${String(n).padStart(2, "0")}.jpg`);
+
 const galleryItems = [
-  {
-    title: "新洽記品牌足跡", date: "品牌紀錄", images: [
-      "images/produce/produce_2.jpg",
-      "images/produce/produce_1.jpg",
-      "images/photo/photo_2.jpg"
-    ]
-  },
-  {
-    title: "家族傳承記憶", date: "歷史影像", images: [
-      "images/family.png",
-      "images/photo/photo_3.jpg"
-    ]
-  },
-  {
-    title: "從一粒花生開始", date: "產品紀錄", images: [
-      "images/photo/photo_1.jpg",
-      "images/produce/produce_2.jpg"
-    ]
-  },
-  {
-    title: "商行日常風景", date: "日常紀錄", images: [
-      "images/photo/photo_2.jpg",
-      "images/produce/produce_1.jpg",
-      "images/photo/photo_3.jpg"
-    ]
-  }
+  { title: "國道西湖休息區雜糧節", date: "2026.09.19", images: gallery("xihu-grain-festival", [1]) },
+  { title: "潮市集・端午擺攤", date: "2026.06.20", images: gallery("chao-market-dragon-boat", [2, 1, 3, 4, 5, 6, 7, 8, 9, 10]) },
+  { title: "媽祖遶境擺攤", date: "2025.04・2026.04", images: gallery("mazu-pilgrimage", [9, 7, 8, 1, 2, 3, 4, 5, 6]) },
+  { title: "過年・萬得醫院擺攤", date: "2026.02", images: gallery("lunar-new-year-hospital", [1, 2, 3]) },
+  { title: "台中農糧署國產雜糧農產品特賣", date: "2025.09.28", images: gallery("taichung-grain-market", [1, 2, 3, 4]) }
 ];

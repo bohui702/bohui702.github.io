@@ -24,13 +24,6 @@ document.querySelector("[data-news]").innerHTML = newsItems.map((item, index) =>
   </button>
 `).join("");
 
-document.querySelector("[data-gallery]").innerHTML = galleryItems.map((item, index) => `
-  <button class="gallery-item reveal" type="button" data-gallery-index="${index}">
-    <img src="${item.images[0]}" alt="${item.title}" loading="lazy">
-    <span class="gallery-count">▧ ${item.images.length} 張照片</span>
-    <span class="gallery-caption">${item.title}</span>
-  </button>
-`).join("");
 
 const modal = document.querySelector("[data-modal]");
 const modalContent = document.querySelector("[data-modal-content]");
@@ -77,7 +70,6 @@ document.querySelectorAll("[data-product-index]").forEach(card => {
   card.addEventListener("keydown", event => { if (event.key === "Enter") goToShop(); });
 });
 document.querySelectorAll("[data-news-index]").forEach(item => item.addEventListener("click", () => showNews(Number(item.dataset.newsIndex))));
-document.querySelectorAll("[data-gallery-index]").forEach(item => item.addEventListener("click", () => showAlbum(Number(item.dataset.galleryIndex))));
 document.querySelectorAll("[data-close-modal]").forEach(button => button.addEventListener("click", closeModal));
 
 modal.addEventListener("click", event => {
@@ -104,6 +96,153 @@ document.addEventListener("keydown", event => {
     modalContent.innerHTML = albumViewerMarkup();
   }
 });
+
+// ===== 活動花絮：可左右滑動、無限循環的相簿輪播 =====
+// 做法：在真正的相簿前後各多放幾本「複製品」，滑到複製品時瞬間跳回對應的真正相簿，看起來就像沒有盡頭。
+const galleryCarousel = document.querySelector("[data-gallery]");
+const galleryViewport = document.querySelector("[data-gallery-viewport]");
+const galleryTrack = document.querySelector("[data-gallery-track]");
+const galleryCounter = document.querySelector("[data-gallery-counter]");
+const galleryDots = document.querySelector("[data-gallery-dots]");
+const albumCount = galleryItems.length;
+const pad2 = number => String(number).padStart(2, "0");
+
+let perView = 0;      // 一次顯示幾本（由 CSS 的 --per-view 決定）
+let cloneCount = 0;   // 前後各放幾本複製品
+let position = 0;     // 目前最左邊那張卡片在軌道上的位置（含複製品）
+let slideWidth = 0;   // 一張卡片加間距的寬度
+
+const albumCard = (index, isClone) => {
+  const item = galleryItems[index];
+  return `
+  <button class="gallery-item" type="button" data-gallery-index="${index}" ${isClone ? 'tabindex="-1" aria-hidden="true"' : ""}>
+    <img src="${item.images[0]}" alt="${item.title}" loading="lazy" draggable="false">
+    <span class="gallery-number">No.${pad2(index + 1)}</span>
+    <span class="gallery-count">▧ ${item.images.length} 張照片</span>
+    <span class="gallery-caption">${item.title}<small>${item.date}</small></span>
+  </button>`;
+};
+
+const activeAlbumIndex = () => ((position - cloneCount) % albumCount + albumCount) % albumCount;
+
+function buildGallery() {
+  const keepIndex = galleryTrack.children.length ? activeAlbumIndex() : 0;
+  perView = Number(getComputedStyle(galleryCarousel).getPropertyValue("--per-view")) || 1;
+  const loops = albumCount > perView;
+  cloneCount = loops ? perView + 1 : 0;
+
+  const cards = [];
+  for (let i = -cloneCount; i < albumCount + cloneCount; i++) {
+    cards.push(albumCard((i % albumCount + albumCount) % albumCount, i < 0 || i >= albumCount));
+  }
+  galleryTrack.innerHTML = cards.join("");
+  galleryCarousel.querySelectorAll(".gallery-nav").forEach(button => { button.hidden = !loops; });
+  galleryDots.innerHTML = loops
+    ? galleryItems.map((item, index) => `<button type="button" data-gallery-dot="${index}" aria-label="第 ${index + 1} 本：${item.title}">${index + 1}</button>`).join("")
+    : "";
+
+  measureGallery();
+  moveGallery(keepIndex + cloneCount, false);
+}
+
+function measureGallery() {
+  const first = galleryTrack.children[0];
+  if (!first) return;
+  const gap = parseFloat(getComputedStyle(galleryTrack).columnGap) || 0;
+  slideWidth = first.getBoundingClientRect().width + gap;
+  galleryCarousel.style.setProperty("--photo-height", `${first.querySelector("img").getBoundingClientRect().height}px`);
+}
+
+function moveGallery(nextPosition, animate = true, dragOffset = 0) {
+  position = nextPosition;
+  galleryTrack.classList.toggle("no-anim", !animate);
+  galleryTrack.style.transform = `translateX(${-position * slideWidth + dragOffset}px)`;
+  galleryCounter.textContent = albumCount > perView ? `${pad2(activeAlbumIndex() + 1)} / ${pad2(albumCount)}` : "";
+  galleryDots.querySelectorAll("[data-gallery-dot]").forEach(dot => {
+    dot.classList.toggle("active", Number(dot.dataset.galleryDot) === activeAlbumIndex());
+  });
+}
+
+// 停在複製品上時，瞬間換成對應的真正相簿（沒有動畫，看不出來）
+function settleGallery() {
+  if (!cloneCount) return;
+  if (position >= cloneCount + albumCount) moveGallery(position - albumCount, false);
+  else if (position < cloneCount) moveGallery(position + albumCount, false);
+  void galleryTrack.offsetWidth; // 讓瀏覽器先套用上面的瞬間移動，下一步的動畫才會正確
+}
+
+function stepGallery(steps) {
+  if (!cloneCount) return;
+  settleGallery();
+  moveGallery(position + steps);
+}
+
+galleryTrack.addEventListener("transitionend", settleGallery);
+document.querySelector("[data-gallery-prev]").addEventListener("click", () => stepGallery(-1));
+document.querySelector("[data-gallery-next]").addEventListener("click", () => stepGallery(1));
+galleryDots.addEventListener("click", event => {
+  const dot = event.target.closest("[data-gallery-dot]");
+  if (!dot) return;
+  settleGallery();
+  moveGallery(Number(dot.dataset.galleryDot) + cloneCount);
+});
+
+// 手指滑動 / 滑鼠拖曳
+let dragStartX = null;
+let dragDistance = 0;
+let justDragged = false;
+
+galleryViewport.addEventListener("pointerdown", event => {
+  if (!cloneCount || event.button > 0) return;
+  settleGallery();
+  dragStartX = event.clientX;
+  dragDistance = 0;
+});
+
+galleryViewport.addEventListener("pointermove", event => {
+  if (dragStartX === null) return;
+  dragDistance = event.clientX - dragStartX;
+  if (Math.abs(dragDistance) > 6 && !galleryViewport.classList.contains("dragging")) {
+    galleryViewport.classList.add("dragging");
+    galleryViewport.setPointerCapture(event.pointerId);
+  }
+  if (galleryViewport.classList.contains("dragging")) moveGallery(position, false, dragDistance);
+});
+
+function endDrag() {
+  if (dragStartX === null) return;
+  const wasDragging = galleryViewport.classList.contains("dragging");
+  galleryViewport.classList.remove("dragging");
+  dragStartX = null;
+  if (!wasDragging) return;
+  justDragged = true;
+  setTimeout(() => { justDragged = false; }, 0);
+  // 拖超過卡片寬度的 15% 就換頁；拖得遠可以一次換好幾本
+  const steps = Math.abs(dragDistance) < slideWidth * 0.15 ? 0
+    : -Math.sign(dragDistance) * Math.max(1, Math.round(Math.abs(dragDistance) / slideWidth));
+  moveGallery(position + steps);
+}
+galleryViewport.addEventListener("pointerup", endDrag);
+galleryViewport.addEventListener("pointercancel", endDrag);
+
+// 點相簿打開（剛拖曳完的那一下不算點擊）
+galleryTrack.addEventListener("click", event => {
+  const card = event.target.closest("[data-gallery-index]");
+  if (card && !justDragged) showAlbum(Number(card.dataset.galleryIndex));
+});
+
+// 視窗大小改變：一次顯示的本數變了就重建，否則只重新計算寬度
+let galleryResizeFrame = null;
+window.addEventListener("resize", () => {
+  cancelAnimationFrame(galleryResizeFrame);
+  galleryResizeFrame = requestAnimationFrame(() => {
+    const nextPerView = Number(getComputedStyle(galleryCarousel).getPropertyValue("--per-view")) || 1;
+    if (nextPerView !== perView) buildGallery();
+    else { measureGallery(); moveGallery(position, false); }
+  });
+});
+
+if (albumCount) buildGallery();
 
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {

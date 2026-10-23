@@ -144,7 +144,18 @@
           <h2>活動花絮</h2>
         </div>
       </div>
-      <div class="gallery-grid" data-gallery></div>
+      <!-- 相簿輪播：可左右滑動，最後一本的下一本會回到第一本（程式在 js/home.js） -->
+      <div class="gallery-carousel reveal" data-gallery>
+        <button class="gallery-nav prev" type="button" data-gallery-prev aria-label="上一本相簿">‹</button>
+        <div class="gallery-viewport" data-gallery-viewport>
+          <div class="gallery-track" data-gallery-track></div>
+        </div>
+        <button class="gallery-nav next" type="button" data-gallery-next aria-label="下一本相簿">›</button>
+      </div>
+      <div class="gallery-pager">
+        <span class="gallery-counter" data-gallery-counter></span>
+        <div class="gallery-dots" data-gallery-dots></div>
+      </div>
     </section>
 
     <!-- ===== 聯絡我們 ===== -->
