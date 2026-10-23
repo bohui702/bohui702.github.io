@@ -1,0 +1,50 @@
+# ========================================
+# 發布網站到 GitHub Pages
+# ========================================
+# 每次 push 到 main 時自動發布網站。
+# 發布前會把 HTML 裡的「?v=dev」換成這次 commit 的編號，
+# 讓訪客的瀏覽器一定下載最新的 CSS / JS，不會用到舊的快取而壞掉。
+#
+# 第一次使用要先到 GitHub repo → Settings → Pages → Build and deployment，
+# 把 Source 改成「GitHub Actions」。
+
+name: 發布網站
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 加上版本編號
+        run: |
+          VERSION="${GITHUB_SHA::8}"
+          sed -i "s/?v=dev/?v=${VERSION}/g" *.html
+          echo "版本編號：${VERSION}"
+          grep -o 'js/home.js?v=[a-z0-9]*' index.html
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
