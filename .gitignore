@@ -1,0 +1,23 @@
+# ========================================
+# 不要上傳到 GitHub 的檔案
+# ========================================
+# 網站（bohui702.github.io）是公開的，這裡列出的檔案只會留在自己的電腦上。
+# 注意：已經上傳過的檔案不受影響，要先從 Git 移除才會被忽略。
+
+# 內部文件：上架資訊表含統編、電話、地址等資料
+docs/
+
+# 原始照片：檔案很大，網站用的是 images/shop/ 裡縮小過的版本
+images/photo/Shop/
+images/photo/3001.JPG
+images/photo/Hero.JPG
+
+# 編輯工具設定
+.claude/
+.vscode/
+
+# 系統與 Office 暫存檔
+~$*
+Thumbs.db
+desktop.ini
+.DS_Store
