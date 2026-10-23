@@ -1,7 +1,7 @@
 // ========================================
 // 訂單管理後台（admin.html）
 // ========================================
-// 資料庫設定見 supabase/admin_setup.sql。
+// 資料庫設定見 supabase/schema.sql。
 // 一般不需要修改；想改狀態名稱改下面的 STATUSES。
 
 const STATUSES = [
