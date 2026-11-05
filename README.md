@@ -54,11 +54,26 @@ docs/                   需求紀錄、網站修正 Excel（不會上傳到 GitH
 | 某一區的排版、大小、間距 | `css/style.css` | 搜尋編號標題，例如「7. 首頁｜本季熱門商品」 |
 | 分享縮圖、分享標題 | `index.html`、`shop.html` 的 `og:` 標籤；圖片 `images/og-image.jpg` | |
 
-## 新訂單 Email 通知
+## 新訂單通知（⏸ 尚未啟用，待和店家討論）
 
-顧客送出訂單後，Supabase 會透過 Resend 寄信通知店家。
-設定方式寫在 `supabase/migrations/2026-11-05_order_limits_and_email.sql` 檔案開頭。
-API 金鑰與收件信箱存在 Supabase Vault，不會出現在程式碼裡。
+目前有新訂單時，只能打開 `admin.html` 才看得到。之後可以加上「有新訂單就主動通知店家」的功能，
+需要先和店家討論想用哪一種方式：
+
+| 方式 | 說明 | 需要準備 |
+|---|---|---|
+| Email（Resend） | 程式已寫好，只差設定。每天免費 100 封 | 到 resend.com 註冊、建立 API Key |
+| Email（用店家自己的 Gmail 寄） | 不用註冊新服務 | Gmail 應用程式密碼＋另寫一支 Supabase Edge Function |
+| Telegram / Discord 通知 | 免費、手機即時跳通知，不會被歸到垃圾郵件 | 店家要使用 Telegram 或 Discord |
+
+討論時可以順便確認：
+- 通知要寄給誰（一個人或多人）？
+- 通知內容需要哪些資訊（訂單編號、金額、商品、顧客資料……）？
+- 除了新訂單，還需要其他通知嗎（例如顧客取消、每日訂單統計）？
+- 要不要也寄「訂單確認信」給顧客？（需要自己的網域，設定會多一些）
+
+**技術備註**：Email（Resend）的程式已經包含在 `supabase/migrations/2026-11-05_order_limits_and_email.sql`，
+沒有設定金鑰時不會寄信、也不影響下單。啟用方式寫在該檔案開頭（金鑰存在 Supabase Vault，不要寫進程式碼）。
+寄信一定要透過寄信服務：GitHub Pages 和 Supabase 資料庫都不能直接寄 Email，金鑰也不能放在網頁裡。
 
 ## 本機預覽
 
