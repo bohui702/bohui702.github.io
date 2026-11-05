@@ -7,11 +7,13 @@
 # 內部文件：上架資訊表含統編、電話、地址等資料
 docs/
 
-# 原始照片：檔案很大，網站用的是 images/shop/ 裡縮小過的版本
-images/photo/Shop/
-images/photo/3001.JPG
-images/photo/Hero.JPG
-# images/active/
+# 原始照片：檔案很大，而且可能含 GPS 定位等個人資訊，只留在自己電腦。
+# 網站用的是 tools/process_photos.py 轉出來的縮小版（images/gallery/、images/shop/）。
+originals/
+
+# Python 虛擬環境（給 tools/ 的腳本用）
+.venv/
+__pycache__/
 
 # 編輯工具設定
 .claude/

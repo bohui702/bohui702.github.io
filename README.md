@@ -32,6 +32,12 @@ images/produce/         商品氛圍照
 images/photo/           一般照片
 images/family.jpg       品牌故事的老照片
 
+originals/              ⚠ 原始照片（含 GPS 定位，不會上傳到 GitHub）
+  gallery/<相簿>/        活動照片原圖，資料夾名稱和 images/gallery/ 對應
+  shop/                 商品照原圖
+  photo/                其他大圖
+tools/process_photos.py 原圖 → 網站用照片（縮小、轉 jpg、去除 GPS）
+
 supabase/schema.sql     資料庫完整建置檔（⚠ 重跑會清空訂單，一般不要動）
 supabase/migrations/    之後的資料庫修改（只新增、不清空，依日期順序執行）
 docs/                   需求紀錄、網站修正 Excel（不會上傳到 GitHub）
@@ -45,7 +51,7 @@ docs/                   需求紀錄、網站修正 Excel（不會上傳到 GitH
 | 選單項目 | `index.html` | 搜尋 `site-nav` |
 | IG、FB、Email、Linktree 網址 | `js/content.js` | 最上面的 `siteLinks`（全站會一起更新） |
 | 新增／修改最新消息 | `js/content.js` | `newsItems` |
-| 新增活動相簿、換照片 | `js/content.js` | `galleryItems`，照片放進 `images/gallery/` 後填資料夾與編號 |
+| 新增活動相簿、換照片 | `js/content.js` | `galleryItems`，照片先照下面「新增照片」轉檔，再填資料夾與編號 |
 | 商品名稱、介紹、照片、首頁要顯示哪三個 | `js/products.js` | `popular: true` 的會出現在首頁 |
 | **商品價格** | Supabase `products` 表 **和** `js/products.js` 的 `price` | 選購頁讀 Supabase；首頁顯示 `products.js` 的價格，兩邊改成一樣 |
 | **多件優惠** | Supabase `discount_rules` 表 | 只改這裡，選購頁會自動顯示 |
@@ -53,6 +59,44 @@ docs/                   需求紀錄、網站修正 Excel（不會上傳到 GitH
 | 主色調、字體 | `css/style.css` | 第 0 區 `:root` |
 | 某一區的排版、大小、間距 | `css/style.css` | 搜尋編號標題，例如「7. 首頁｜本季熱門商品」 |
 | 分享縮圖、分享標題 | `index.html`、`shop.html` 的 `og:` 標籤；圖片 `images/og-image.jpg` | |
+
+## 新增照片（⚠ 原圖不要直接上傳）
+
+手機拍的原圖裡藏有 EXIF 資訊，包含**拍攝地點的 GPS 座標**，原圖如果放上公開的 GitHub，任何人都能下載下來看到。
+所以原圖一律放在 `originals/`（已設定不上傳），用腳本轉成網站用的版本再上傳。
+
+**第一次使用**（在專案資料夾執行，建立 Python 虛擬環境、安裝圖片套件）：
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r tools/requirements.txt
+```
+
+**新增一本活動相簿**：
+
+1. 在 `originals/gallery/` 底下建一個英文資料夾（例如 `autumn-market-2026`），把原圖丟進去（iPhone 的 HEIC 也可以）。
+   照片會依檔名排序編號。
+2. 轉檔：
+   ```powershell
+   .venv\Scripts\Activate.ps1
+   python tools/process_photos.py autumn-market-2026
+   ```
+   會產生 `images/gallery/autumn-market-2026/01.jpg、02.jpg…`（最長邊 1200px、不含 GPS），
+   最後會印出要貼到 `js/content.js` 的那一行。
+3. 在 `js/content.js` 的 `galleryItems` 最上面加一筆（第一個編號是封面）。
+4. 上傳前檢查一次：`python tools/process_photos.py --check`，看到 ✓ 再 commit、push。
+
+**其他用法**：
+
+| 情況 | 指令 |
+|---|---|
+| 已有的相簿要加新照片 | `python tools/process_photos.py 相簿名稱 --append`（從下一個編號接著加） |
+| 整本相簿重新產生 | `python tools/process_photos.py 相簿名稱 --overwrite` |
+| 商品照（保留檔名、1400px） | `python tools/process_photos.py --src originals/shop --dst images/shop --keep-names --max 1400` |
+| 只檢查有沒有 GPS | `python tools/process_photos.py --check`（可以接資料夾或檔案） |
+
+腳本預設不會覆蓋已存在的檔案，遇到會停下來提示。
 
 ## 新訂單通知（⏸ 尚未啟用，待和店家討論）
 

@@ -27,7 +27,8 @@ const newsItems = [
 
 // ===== 活動花絮（相簿） =====
 // 每一個 { } 是一本相簿；images 放同一場活動的多張照片，第一張會當封面。最新的放最上面。
-// 照片放在 images/gallery/ 資料夾（原始照片在 images/active/，不會上傳到 GitHub）。
+// 照片放在 images/gallery/ 資料夾。原圖放 originals/gallery/<資料夾>/（不會上傳到 GitHub），
+// 用 python tools/process_photos.py <資料夾> 轉檔（縮小＋去除 GPS），步驟見 README「新增照片」。
 const gallery = (folder, numbers) => numbers.map(n => `images/gallery/${folder}/${String(n).padStart(2, "0")}.jpg`);
 
 const galleryItems = [

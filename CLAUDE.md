@@ -56,7 +56,10 @@ HTML 引用 CSS/JS 一律寫成 `?v=dev`（例如 `js/home.js?v=dev`）。部署
 ### 圖片
 
 - 網站用的是縮小過的版本：`images/shop/`、`images/gallery/<活動>/01.jpg…`。
-- 原始大圖在 `images/active/`、`images/photo/Shop/` 等，部分已在 `.gitignore` 中不上傳。新增相簿時先轉成 jpg 縮小放進 `images/gallery/`，再在 `content.js` 的 `galleryItems` 用 `gallery(folder, [編號])` 填入（第一個編號是封面）。
+- 原圖全部放在 `originals/`（整個 gitignore；`gallery/<相簿>/` 名稱對應 `images/gallery/<相簿>/`、`shop/`、`photo/`）。**原圖大多含 GPS，絕對不要 commit**；repo 是公開的。
+- 轉檔一律用 `tools/process_photos.py`（Pillow + pillow-heif，裝在專案 `.venv`，見 `tools/requirements.txt`）：轉正方向、縮到最長邊 1200（商品照 1400）、轉 jpg、去除 EXIF 但保留 ICC。預設不覆蓋既有檔案（`--append` / `--overwrite`）。`--check` 掃描 `images/` 有無 GPS，commit 新照片前跑一次。
+- 新增相簿：`python tools/process_photos.py <相簿>` → 在 `content.js` 的 `galleryItems` 用 `gallery(folder, [編號])` 填入（第一個編號是封面）。
+- 歷史 commit `d4e790e` 曾把含 GPS 的原圖（舊路徑 `images/active/`）推上 GitHub，歷史紀錄尚未清除（要用 git filter-repo + force push，需使用者同意）。
 
 ### CSS
 
