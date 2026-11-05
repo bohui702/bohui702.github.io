@@ -16,6 +16,21 @@ docs/
 # 網站用的是 tools/process_photos.py 轉出來的縮小版（images/gallery/、images/shop/）。
 originals/
 
+# ---------- 跟網站運作無關（說明文件、工具、資料庫紀錄）----------
+# ⚠ 這些只存在自己電腦，沒有 GitHub 備份，請另外備份。
+
+README.md
+CLAUDE.md
+tools/
+supabase/
+
+# 網站沒用到的圖片（要用時從這裡刪掉該行，並在網頁加上引用）
+images/icon/icon-512.png
+images/logo/logo.jpg
+images/photo/photo_3.jpg
+images/produce/produce_2.jpg
+images/shop/roasted-peanuts.jpg
+
 # ---------- 只有自己電腦需要 ----------
 
 # Python 虛擬環境（給 tools/ 的腳本用，每台電腦自己建）
