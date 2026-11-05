@@ -1061,17 +1061,65 @@ footer a { display: block; margin: 5px 0; }
   .shop-flow article { gap: 0; align-content: start; padding: 10px 12px; }
   .shop-flow b { font-size: 14px; }
   .shop-flow span { font-size: 17px; }
-  .checkout-summary { padding: 16px; }
-  .catalog-grid { grid-template-columns: 1fr; }
-  .catalog-card-head { padding: 18px 16px 10px; }
-  .catalog-card-head span { font-size: 14px; }
-  .catalog-photo { padding: 12px 24px 24px; }
-  .catalog-copy { padding: 18px; }
-  .catalog-copy h3 { font-size: 23px; }
-  .catalog-actions { grid-template-columns: 1fr; align-items: stretch; }
-  .catalog-actions > button { grid-column: auto; width: 100%; }
-  .checkout-form { padding: 16px; }
-  .form-grid { grid-template-columns: 1fr; }
-  .payment-box label { grid-template-columns: auto 1fr; }
-  .bank-info dl > div { grid-template-columns: 1fr; gap: 4px; }
+  .checkout-summary { padding: 14px 16px; }
+  .checkout-summary h3 { margin-bottom: 8px; font-size: 22px; }
+  .summary-total { margin: 10px 0 6px; padding-top: 10px; font-size: 20px; }
+
+  /* 商品卡（手機）：照片在左、標題在右，優惠／單價／數量在下方整排，
+     一張卡約半個畫面，不用一直往下滑。catalog-copy 用 display: contents
+     讓裡面的元素直接排進卡片的格線 */
+  .catalog-grid { grid-template-columns: 1fr; gap: 14px; }
+  .catalog-card {
+    grid-template-columns: 112px minmax(0, 1fr);
+    grid-template-rows: none;
+    gap: 6px 14px;
+    align-content: start;
+    padding: 14px;
+  }
+  .catalog-card-head { grid-column: 2; padding: 0; gap: 4px 6px; justify-content: flex-start; }
+  .catalog-card-head span { min-height: 0; padding: 2px 9px; font-size: 13px; }
+  .catalog-photo { grid-column: 1; grid-row: 1 / span 4; padding: 0; border: 0; }
+  .catalog-photo img { aspect-ratio: 1 / 1; border-radius: 10px; box-shadow: 0 4px 10px rgba(42, 33, 28, 0.14); }
+  .catalog-copy { display: contents; }
+  .catalog-copy > * { grid-column: 2; }
+  .catalog-copy h3 { font-size: 21px; line-height: 1.3; }
+  .catalog-copy p { font-size: 15px; line-height: 1.55; }
+  .catalog-copy .catalog-shelf { font-size: 13px; }
+  .catalog-copy > .promo-box, .catalog-copy > .unit-price,
+  .catalog-copy > .catalog-actions, .catalog-copy > .coming-soon { grid-column: 1 / -1; margin-top: 4px; }
+  /* 優惠方案改成同一行並排 */
+  .promo-box { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 12px; }
+  .promo-box strong { width: 100%; font-size: 14px; }
+  .promo-box span { padding: 2px 8px; font-size: 14px; }
+  .unit-price { padding: 6px 12px; border-radius: 12px; }
+  .unit-price strong { font-size: 21px; }
+  .catalog-copy .coming-soon { padding: 8px 12px; }
+  /* 數量和「加入訂購單」放同一排；「選購數量」文字只保留給螢幕閱讀器 */
+  .catalog-actions { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 10px; }
+  .catalog-actions > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .product-quantity { grid-template-columns: 40px minmax(30px, 1fr) 40px; }
+  .product-quantity button { width: 40px; height: 42px; }
+  .catalog-actions > button { grid-column: auto; min-height: 42px; padding-inline: 10px; }
+
+  /* 訂購資料（手機）：收緊間距，姓名＋稱謂並排 */
+  .checkout-head > p { font-size: 16px; }
+  .checkout-body { gap: 16px; }
+  .checkout-form { gap: 16px; padding: 14px; }
+  .form-grid { grid-template-columns: minmax(0, 1fr) 96px; gap: 12px 10px; }
+  .form-grid > label:nth-child(n+3) { grid-column: 1 / -1; }
+  .checkout-form label { gap: 5px; }
+  .checkout-form input, .checkout-form select, .checkout-form textarea { padding: 10px 12px; }
+  .checkout-form textarea { height: 92px; }
+  .payment-box { gap: 8px; padding: 10px 12px 12px; }
+  .payment-box legend { padding: 0 6px; font-size: 22px; }
+  .payment-box label { grid-template-columns: auto 1fr; gap: 2px 8px; padding: 10px; }
+  .payment-box input { margin-top: 6px; }
+  .payment-box span { font-size: 15px; line-height: 1.55; }
+  .bank-info { padding: 12px 14px; }
+  .bank-info h3 { margin-bottom: 8px; font-size: 20px; }
+  .bank-info dl { gap: 6px; }
+  .bank-info dl > div { grid-template-columns: 76px 1fr; gap: 8px; padding-bottom: 6px; }
+  .account-row dd { gap: 8px; }
+  .account-row button { min-height: 32px; padding: 4px 10px; }
+  .bank-info p { margin-top: 8px; font-size: 15px; }
 }
