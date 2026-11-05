@@ -8,8 +8,11 @@
 --   有真實訂單請先到 Table Editor 把 orders、order_items 匯出成 CSV。
 --   登入帳號（Authentication → Users）不會被刪除，但要重新加回 staff 名單（見最下方）。
 --
--- 以後要修改資料庫，就改這份檔案再整份重跑（同樣會清空訂單）；
--- 只想改商品或價格的話，用 Table Editor 直接改 products 即可，不用重跑。
+-- 以後要修改資料庫：不要重跑這份，改在 supabase/migrations/ 新增一份「只新增、不清空」的 SQL 來執行。
+-- 只想改商品、價格或優惠的話，用 Table Editor 直接改 products / discount_rules 即可（網站會即時讀取）。
+--
+-- ⚠ 萬一真的要從零重建：跑完這份之後，還要依日期順序執行 supabase/migrations/ 裡的每一份檔案，
+--   這份檔案裡的 create_order() 是舊版（沒有防灌單與 Email 通知）。
 --
 -- 資料表關聯：
 --   products ──< discount_rules       一個商品可以有多個數量優惠

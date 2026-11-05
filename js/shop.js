@@ -12,9 +12,27 @@ const bankTransfer = document.querySelector("[data-bank-transfer]");
 const copyAccountButton = document.querySelector("[data-copy-account]");
 
 
+// 單一商品最多訂購數量（和 Supabase create_order 的上限一致）
+const MAX_QUANTITY = 999;
+const clampQuantity = value => Math.min(MAX_QUANTITY, Math.max(1, Math.floor(Number(value) || 1)));
+
+
 // ========================================
 // 商品列表
 // ========================================
+// 價格與優惠由 js/discount.js 從 Supabase 讀取後，會再呼叫一次重畫。
+function promoBox(product) {
+  const tiers = window.getProductTiers ? window.getProductTiers(product.id) : [];
+  if (!tiers.length) return "";
+
+  return `
+      <div class="promo-box">
+        <strong>多件特惠方案：</strong>
+        ${tiers.map(tier => `<span>${window.describeTier(tier, product.unit)}</span>`).join("")}
+      </div>`;
+}
+
+function renderCatalog() {
 catalog.innerHTML = products.map((product, index) => `
   <article class="catalog-card">
     <header class="catalog-card-head">
@@ -31,12 +49,9 @@ catalog.innerHTML = products.map((product, index) => `
       <p>${product.subtitle}</p>
       ${product.shelf ? `<p class="catalog-shelf">保存期限：${product.shelf}</p>` : ""}
 
-      ${product.comingSoon ? `<p class="coming-soon">即將上架，敬請期待</p>` : `
-      ${product.promos.length ? `
-      <div class="promo-box">
-        <strong>多件特惠方案：</strong>
-        ${product.promos.map(promo => `<span>${promo}</span>`).join("")}
-      </div>` : ""}
+      ${product.comingSoon ? `<p class="coming-soon">即將上架，敬請期待</p>` :
+        product.unavailable ? `<p class="coming-soon">目前暫停販售</p>` : `
+      ${promoBox(product)}
 
       <div class="unit-price">
         <span>單價：</span>
@@ -57,6 +72,7 @@ catalog.innerHTML = products.map((product, index) => `
           <input
             type="number"
             min="1"
+            max="${MAX_QUANTITY}"
             value="1"
             inputmode="numeric"
             data-product-quantity="${index}"
@@ -78,6 +94,9 @@ catalog.innerHTML = products.map((product, index) => `
     </div>
   </article>
 `).join("");
+}
+
+renderCatalog();
 
 
 // ========================================
@@ -166,9 +185,12 @@ function renderCart() {
 
 
 function addProduct(index, quantity = 1) {
+  const product = products[index];
+  if (!product || product.comingSoon || product.unavailable) return;
+
   cart.set(
     index,
-    (cart.get(index) || 0) + quantity
+    clampQuantity((cart.get(index) || 0) + quantity)
   );
 
   renderCart();
@@ -188,8 +210,7 @@ catalog.addEventListener("click", event => {
       `[data-product-quantity="${index}"]`
     );
 
-    input.value = Math.max(
-      1,
+    input.value = clampQuantity(
       Number(input.value || 1) + Number(stepButton.dataset.step)
     );
 
@@ -208,9 +229,11 @@ catalog.addEventListener("click", event => {
     `[data-product-quantity="${index}"]`
   );
 
+  input.value = clampQuantity(input.value);
+
   addProduct(
     index,
-    Math.max(1, Number(input.value || 1))
+    Number(input.value)
   );
 });
 
@@ -233,11 +256,46 @@ cartList.addEventListener("click", event => {
   if (nextQuantity <= 0) {
     cart.delete(index);
   } else {
-    cart.set(index, nextQuantity);
+    cart.set(index, Math.min(MAX_QUANTITY, nextQuantity));
   }
 
   renderCart();
 });
+
+
+// ========================================
+// 下單錯誤訊息（Supabase create_order 回傳的代碼 → 給顧客看的中文）
+// ========================================
+const ORDER_ERRORS = {
+  ORDER_NAME_REQUIRED:       "請填寫姓名。",
+  ORDER_NAME_TOO_LONG:       "姓名太長了，請在 30 字以內。",
+  ORDER_PHONE_REQUIRED:      "請填寫聯絡電話。",
+  ORDER_PHONE_INVALID:       "電話格式不正確，請填寫手機或市話號碼（例如 0912-345-678）。",
+  ORDER_ADDRESS_REQUIRED:    "請填寫地址或取貨資訊。",
+  ORDER_ADDRESS_TOO_LONG:    "地址太長了，請在 120 字以內。",
+  ORDER_NOTE_TOO_LONG:       "備註太長了，請在 300 字以內。",
+  ORDER_FIELD_TOO_LONG:      "填寫的內容太長了，請確認後再送出。",
+  ORDER_ITEMS_REQUIRED:      "請先選擇商品。",
+  ORDER_TOO_MANY_ITEMS:      "一次訂購的商品種類太多，請分成兩張訂單。",
+  ORDER_QUANTITY_INVALID:    "商品數量不正確，請重新調整。",
+  ORDER_QUANTITY_TOO_LARGE:  `單一商品最多訂購 ${MAX_QUANTITY} 份，大量訂購請直接與我們聯絡。`,
+  ORDER_DUPLICATE_ITEM:      "訂購單裡有重複的商品，請重新整理頁面後再試一次。",
+  ORDER_PRODUCT_UNAVAILABLE: "訂購單裡有商品目前暫停販售，請重新整理頁面後再選購。",
+  ORDER_RATE_LIMIT_PHONE:    "這支電話剛剛已送出多張訂單，請稍候 10 分鐘再試；若需修改訂單請直接與我們聯絡。",
+  ORDER_RATE_LIMIT_GLOBAL:   "目前訂單較多，請稍候幾分鐘再送出，或直接與我們聯絡。"
+};
+
+function orderErrorMessage(error) {
+  const text = String(error?.message || "");
+  const code = Object.keys(ORDER_ERRORS).find(key => text.includes(key));
+  if (code) return ORDER_ERRORS[code];
+
+  // fetch 失敗（沒網路、連不到 Supabase）
+  if (error instanceof TypeError || /fetch|network/i.test(text)) {
+    return "網路連線不穩定，訂單沒有送出，請確認網路後再試一次。";
+  }
+  return "目前無法建立訂單，請稍後再試，或直接透過電話、Email、IG 與我們聯絡。";
+}
 
 
 // ========================================
@@ -396,8 +454,7 @@ orderForm.addEventListener("submit", async event => {
 
     orderResult.innerHTML = `
       <h3>訂單送出失敗</h3>
-      <p>目前無法建立訂單，請稍後再試。</p>
-      <p><small>${error.message || "Unknown error"}</small></p>
+      <p>${orderErrorMessage(error)}</p>
     `;
 
   } finally {
@@ -462,6 +519,24 @@ copyAccountButton.addEventListener("click", async () => {
 // 初始購物車
 // ========================================
 renderCart();
+
+
+// ========================================
+// 從 Supabase 讀取最新價格與優惠（js/discount.js），讀到後重畫商品與購物車
+// ========================================
+window.loadPricing()
+  .then(() => {
+    renderCatalog();
+
+    // 購物車裡若有剛被下架的商品，移除
+    cart.forEach((_, index) => {
+      if (products[index].unavailable) cart.delete(index);
+    });
+    renderCart();
+  })
+  .catch(error => {
+    console.warn("無法讀取 Supabase 價格，先以 js/products.js 顯示：", error);
+  });
 
 
 // ========================================

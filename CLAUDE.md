@@ -33,15 +33,18 @@ python -m http.server 8123     # 本機預覽 → http://localhost:8123（.claud
 
 ### 價格與商品：前端只是顯示，Supabase 才是真的
 
-- `js/products.js` 的 `id` 必須和 Supabase `products.id` 一致；`price` 與 `js/discount.js` 的優惠只用於畫面預覽。
+- `js/products.js` 的 `id` 必須和 Supabase `products.id` 一致。
+- 選購頁載入時，`js/discount.js` 的 `loadPricing()` 會從 Supabase 讀 `products.price` 與 `discount_rules`，覆蓋 `products[].price`、產生優惠說明文字（`unit` 欄位決定「罐／件」），然後 `shop.js` 重畫商品與購物車。讀取失敗就沿用 `products.js` 的價格、不顯示優惠。Supabase 裡沒有（或 `is_active = false`）的商品會被標成 `unavailable`（暫停販售）。
+- 多件優惠只存在 Supabase `discount_rules`；`products.js` 的 `price` 只剩首頁顯示和備用，改價格時要和 Supabase 一起改。
 - 實際成交價由 Supabase RPC `get_product_price` / `create_order`（security definer）重新計算。
-- **改價格或優惠時三處要同步**：`js/products.js`、`js/discount.js`、Supabase `products` / `discount_rules` 表（以及 `supabase/schema.sql` 的初始資料）。
 - `comingSoon: true` 的商品只展示不能下單，Supabase 不建立；`popular: true` 的前三個出現在首頁。
 
 ### Supabase
 
 - `js/supabase.js` 放 URL 和 publishable key（前端公開用，可以 commit）。**絕對不可放 service_role / secret key**。
-- `supabase/schema.sql` 是整個資料庫的完整定義，整份在 SQL Editor 重跑。**它會先 drop 所有資料表、清空訂單**——不要建議重跑，除非使用者明確要求並先匯出訂單。只改商品／價格用 Table Editor 即可。
+- `supabase/schema.sql` 是最初的完整建置檔，**會先 drop 所有資料表、清空訂單**——不要建議重跑。之後的資料庫修改一律寫成 `supabase/migrations/YYYY-MM-DD_說明.sql`（只用 `create or replace`、`if not exists`、`add`，不清空資料），由使用者自己貼到 SQL Editor 執行（Claude 沒有資料庫存取權）。
+- `create_order` 的最新版在 `migrations/2026-11-05_order_limits_and_email.sql`：欄位長度／電話格式／數量 ≤ 999／同電話 10 分鐘 3 張／全站 10 分鐘 30 張。錯誤用代碼（`ORDER_*`）丟出，`shop.js` 的 `ORDER_ERRORS` 翻成中文；新增代碼時兩邊都要改。長度上限要和 `shop.html` 的 `maxlength` 一致。
+- 新訂單 Email：`create_order` 最後呼叫 `notify_new_order()`，經 pg_net 呼叫 Resend API。API key 和收件信箱存在 Supabase Vault（`resend_api_key`、`order_notify_email`），**不要寫進任何檔案**（repo 是公開的）。
 - 權限：anon 只能讀 products / discount_rules 和呼叫 `create_order`、`get_product_price`；`admin.html` 用 email 密碼登入，且帳號必須在 `staff` 表裡（`is_staff()`）才能讀寫 orders。orders 有開 realtime。
 - 訂單狀態流程：`new` → `confirmed` → `shipped` → `done`，另有 `cancelled`（定義在 `admin.js` 的 `STATUSES`）。
 - `.github/workflows/supabase-keepalive.yml` 每週一、四呼叫 `get_product_price` 防止免費方案暫停；它用 grep 從 `js/supabase.js` 抓 `SUPABASE_URL = "..."` 和 `SUPABASE_PUBLISHABLE_KEY = "..."`，**改那兩行時要保持這個格式**。
@@ -66,6 +69,8 @@ HTML 引用 CSS/JS 一律寫成 `?v=dev`（例如 `js/home.js?v=dev`）。部署
 - 偏好溫暖、有底圖的感覺，但功能以實用為主，不要花俏。
 - 設計依客戶喜好，改視覺前先問。
 
-## 注意
+## 測試注意
 
-`README.md` 是 UTF-16 編碼（用 PowerShell `Get-Content -Encoding Unicode` 讀）；內容有些過時：提到的 `supabase/order_functions.sql` 實際上是 `supabase/schema.sql`，也沒寫到 `admin.html`。
+- 本機測試**不要真的送出訂單**（會寫進正式資料庫、寄通知信）；用 Playwright 攔截 `**/rpc/create_order` 回傳假結果。
+- 這台電腦的 Playwright 沒下載瀏覽器，用 `channel="msedge"`；`localhost` 可能連不到，用 `127.0.0.1`。
+- `images/icon/`（favicon）、`images/og-image.jpg`（分享縮圖 1200×630）是由 `images/logo/logo-dark.png`、`images/produce/produce_3.jpg` 產生的。

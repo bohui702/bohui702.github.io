@@ -6,6 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="新洽記商行商品選購｜加入購物車、填寫訂購資訊，使用非信用卡付款方式完成訂單確認。">
   <title>商品選購｜新洽記商行</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/icon/favicon-32.png">
+  <link rel="apple-touch-icon" href="images/icon/apple-touch-icon.png">
+  <!-- 分享到 LINE / Facebook 時顯示的標題、介紹、縮圖（網址要用完整網址） -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="新洽記商行">
+  <meta property="og:title" content="商品選購｜新洽記商行">
+  <meta property="og:description" content="焙炒花生、手工花生糖、純花生醬，多件另有優惠。線上填寫訂單，銀行轉帳或貨到付款。">
+  <meta property="og:url" content="https://bohui702.github.io/shop.html">
+  <meta property="og:image" content="https://bohui702.github.io/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="zh_TW">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -87,7 +100,7 @@
 
       <form class="checkout-form" data-order-form>
         <div class="form-grid">
-          <label><span class="required-label">姓名</span><input name="name" type="text" required
+          <label><span class="required-label">姓名</span><input name="name" type="text" required maxlength="30" autocomplete="name"
               placeholder="請輸入姓名"></label>
           <label><span class="required-label">稱謂</span>
             <select name="title" required>
@@ -95,7 +108,7 @@
               <option value="小姐">小姐</option>
             </select>
           </label>
-          <label><span class="required-label">電話</span><input name="phone" type="tel" required
+          <label><span class="required-label">電話</span><input name="phone" type="tel" required maxlength="20" autocomplete="tel"
               placeholder="請輸入可聯絡電話"></label>
           <label><span class="required-label">配送方式</span>
             <select name="delivery" required>
@@ -104,9 +117,9 @@
               <option value="自行到店取貨">自行到店取貨</option>
             </select>
           </label>
-          <label class="form-wide"><span class="required-label">地址或取貨資訊</span><input name="address" type="text" required
+          <label class="form-wide"><span class="required-label">地址或取貨資訊</span><input name="address" type="text" required maxlength="120"
               placeholder="宅配地址、超商門市"></label>
-          <label class="form-wide">備註<textarea name="note" rows="4"
+          <label class="form-wide">備註<textarea name="note" rows="4" maxlength="300"
               placeholder="想詢問的商品規格、送禮需求、希望到貨時間等"></textarea></label>
         </div>
 
@@ -163,7 +176,8 @@
     <p class="copyright">© <span data-year></span> SIN-HIÁP-KÌ. ALL RIGHTS RESERVED.</p>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- 鎖定版本，和 admin.html 相同；要升級時兩頁一起改 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script src="js/supabase.js?v=dev"></script>
   <script src="js/content.js?v=dev"></script>
   <script src="js/products.js?v=dev"></script>

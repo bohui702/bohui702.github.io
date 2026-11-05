@@ -7,10 +7,12 @@
 // name     商品名稱
 // subtitle 商品介紹（選購頁顯示完整內容）
 // short    首頁卡片用的短介紹（卡片較窄，建議 30 字以內）
-// price    原價（數字）。真正成交價由 Supabase 計算，這裡改了也要同步改 Supabase
+// price    首頁顯示的價格。選購頁會改讀 Supabase products.price（這裡只是首頁顯示與備用），
+//          改價格時請改 Supabase，並把這裡改成一樣的數字
 // tag      左上角紅色標籤
 // spec     規格
-// promos   多件優惠文字（只是顯示用；實際優惠規則在 js/discount.js 與 Supabase）
+// unit     計量單位，用在優惠說明「滿 30 罐起」（沒填就是「件」）。
+//          多件優惠本身改在 Supabase 的 discount_rules，選購頁會自動顯示
 // shelf    保存期限（選購頁顯示）
 // popular  true = 出現在首頁「本季熱門商品」（首頁最多顯示 3 個）
 // comingSoon true = 即將上架：只展示，不能加入訂購單
@@ -26,7 +28,7 @@ const products = [
     tag: "頂級焙炒花生",
     spec: "規格：280g/罐",
     shelf: "3 個月",
-    promos: ["滿 30 罐起 → $140", "滿 50 罐起 → $135"],
+    unit: "罐",
     popular: true,
     image: "images/shop/Roasted Five-Spice Peanuts.JPG"
   },
@@ -39,7 +41,7 @@ const products = [
     tag: "頂級焙炒花生",
     spec: "規格：280g/罐",
     shelf: "3 個月",
-    promos: ["滿 30 罐起 → $140", "滿 50 罐起 → $135"],
+    unit: "罐",
     popular: true,
     image: "images/shop/Roasted Peanuts with Sichuan Peppercorn and Chili.JPG"
   },
@@ -52,7 +54,7 @@ const products = [
     tag: "頂級焙炒花生",
     spec: "規格：280g/罐",
     shelf: "3 個月",
-    promos: ["滿 30 罐起 → $170", "滿 50 罐起 → $160"],
+    unit: "罐",
     popular: true,
     image: "images/shop/Roasted and Stir-fried Golden Diamond Red-Skinned Peanuts.JPG"
   },
@@ -65,7 +67,6 @@ const products = [
     tag: "手工花生糖",
     spec: "規格：140g(±5%)",
     shelf: "2 個月",
-    promos: [],
     popular: false,
     image: "images/shop/low-sugar-brittle.jpg"
   },
@@ -78,7 +79,6 @@ const products = [
     tag: "手工花生糖",
     spec: "規格：禮盒14入",
     shelf: "3 個月",
-    promos: ["滿 20 件起 → $180"],
     popular: false,
     image: "images/shop/gift-box-brittle.jpg"
   },
@@ -91,7 +91,6 @@ const products = [
     tag: "送禮首選",
     spec: "規格：花生2罐＋花生糖6份",
     shelf: "3 個月",
-    promos: [],
     popular: false,
     image: "images/shop/hiap-gift-set.jpg"
   },
@@ -103,7 +102,6 @@ const products = [
     price: 0,
     tag: "即將上架",
     spec: "",
-    promos: [],
     popular: false,
     comingSoon: true, // true = 只展示、不能加入訂購單；資料補齊後改成 false 並填上價格
     image: "images/shop/brand-bags.jpg"
@@ -117,7 +115,6 @@ const products = [
     tag: "天然抹醬",
     spec: "規格：380g(±5g)",
     shelf: "2 個月",
-    promos: [],
     popular: false,
     image: "images/shop/brand-bags.jpg"
   }
