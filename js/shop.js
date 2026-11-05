@@ -10,6 +10,12 @@ const orderForm = document.querySelector("[data-order-form]");
 const orderResult = document.querySelector("[data-order-result]");
 const bankTransfer = document.querySelector("[data-bank-transfer]");
 const copyAccountButton = document.querySelector("[data-copy-account]");
+const summaryList = document.querySelector("[data-summary-list]");
+const summaryTotal = document.querySelector("[data-summary-total]");
+const cartBar = document.querySelector("[data-cart-bar]");
+const cartBarText = document.querySelector("[data-cart-bar-text]");
+const cartCount = document.querySelector("[data-cart-count]");
+const addressInput = document.querySelector("[data-address-input]");
 
 
 // 單一商品最多訂購數量（和 Supabase create_order 的上限一致）
@@ -121,6 +127,8 @@ function getPreviewUnitPrice(product, quantity) {
 // 購物車
 // ========================================
 function renderCart() {
+  renderSummary();
+
   if (!cart.size) {
     cartList.innerHTML = `<p class="cart-empty">尚未選擇商品。</p>`;
     cartTotal.textContent = money(0);
@@ -184,6 +192,53 @@ function renderCart() {
 }
 
 
+// ========================================
+// 訂單摘要（訂購資料旁）、頁首購物車數量、手機底部購物車列
+// ========================================
+let cartQuantity = 0;
+
+function renderSummary() {
+  let total = 0;
+  cartQuantity = 0;
+
+  summaryList.innerHTML = cart.size
+    ? [...cart.entries()].map(([index, quantity]) => {
+        const product = products[index];
+        const subtotal = getPreviewUnitPrice(product, quantity) * quantity;
+        total += subtotal;
+        cartQuantity += quantity;
+        return `<li><span>${product.name} × ${quantity}</span><span>${money(subtotal)}</span></li>`;
+      }).join("")
+    : `<li class="cart-empty">尚未選擇商品。</li>`;
+
+  summaryTotal.textContent = money(total);
+
+  cartCount.hidden = cartQuantity === 0;
+  cartCount.textContent = cartQuantity;
+  cartBarText.textContent = `${cartQuantity} 件・${money(total)}`;
+  syncCartBar();
+}
+
+// 看得到購物車或訂購資料時，就不需要底部購物車列（也避免擋到送出按鈕）
+const sectionsInView = new Set();
+
+function syncCartBar() {
+  const show = cartQuantity > 0 && sectionsInView.size === 0;
+  cartBar.hidden = !show;
+  document.body.classList.toggle("has-cart-bar", show);
+}
+
+const cartBarObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) sectionsInView.add(entry.target);
+    else sectionsInView.delete(entry.target);
+  });
+  syncCartBar();
+});
+cartBarObserver.observe(document.querySelector("#cart"));
+cartBarObserver.observe(document.querySelector("#checkout"));
+
+
 function addProduct(index, quantity = 1) {
   const product = products[index];
   if (!product || product.comingSoon || product.unavailable) return;
@@ -194,6 +249,23 @@ function addProduct(index, quantity = 1) {
   );
 
   renderCart();
+
+  // 底部購物車列跳一下，提示已加入
+  cartBar.classList.remove("bump");
+  void cartBar.offsetWidth;
+  cartBar.classList.add("bump");
+}
+
+
+// 按下「加入訂購單」後，按鈕短暫顯示「已加入」
+function flashAdded(button) {
+  window.clearTimeout(button.flashTimer);
+  button.textContent = "✓ 已加入";
+  button.classList.add("is-added");
+  button.flashTimer = window.setTimeout(() => {
+    button.textContent = "加入訂購單";
+    button.classList.remove("is-added");
+  }, 1600);
 }
 
 
@@ -235,6 +307,8 @@ catalog.addEventListener("click", event => {
     index,
     Number(input.value)
   );
+
+  flashAdded(button);
 });
 
 
@@ -441,6 +515,7 @@ orderForm.addEventListener("submit", async event => {
     renderCart();
 
     orderForm.reset();
+    updateAddressHint();
 
     if (bankTransfer) {
       bankTransfer.hidden = true;
@@ -488,6 +563,24 @@ orderForm
         orderForm.elements.payment.value !== "銀行轉帳";
     });
   });
+
+
+// ========================================
+// 配送方式：地址欄的提示文字跟著改
+// ========================================
+const ADDRESS_HINTS = {
+  "宅配到府": "請輸入收件地址",
+  "超商店到店": "門市名稱＋店號",
+  "自行到店取貨": "請填「自取」，可註明希望取貨的日期時間"
+};
+
+function updateAddressHint() {
+  addressInput.placeholder =
+    ADDRESS_HINTS[orderForm.elements.delivery.value] || "請輸入地址或取貨資訊";
+}
+
+orderForm.elements.delivery.addEventListener("change", updateAddressHint);
+updateAddressHint();
 
 
 // ========================================

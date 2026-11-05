@@ -38,7 +38,8 @@ body {
 body.modal-open { overflow: hidden; }
 a { color: inherit; text-decoration: none; }
 img { display: block; width: 100%; }
-button, input { font: inherit; }
+/* select、textarea 也要繼承字體，否則瀏覽器會用很小的預設字（iPhone 小於 16px 點下去還會自動放大畫面） */
+button, input, select, textarea { font: inherit; }
 button { cursor: pointer; }
 button:focus-visible, a:focus-visible, input:focus-visible {
   outline: 3px solid rgba(205, 167, 134, 0.8);
@@ -786,7 +787,31 @@ footer a { display: block; margin: 5px 0; }
 .cart-total strong { color: var(--red); }
 .cart-checkout { width: 100%; }
 .checkout { background: var(--cream); }
-.checkout-head, .checkout-form, .order-result { max-width: 1000px; }
+/* 電腦版：左邊表單、右邊訂單摘要（跟著捲動） */
+.checkout-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  align-items: start;
+  gap: 28px;
+}
+.checkout-summary {
+  position: sticky;
+  top: 104px;
+  padding: 20px;
+  background: var(--white);
+  border: 2px solid var(--ink);
+}
+.checkout-summary h3 { margin-bottom: 12px; font-size: 26px; }
+.summary-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.summary-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 16px;
+}
+.summary-list li span:last-child { flex-shrink: 0; font-weight: 700; }
+.summary-total { margin: 14px 0 10px; }
+.summary-edit { color: var(--muted); font-size: 15px; text-decoration: underline; }
 .checkout-head > p {
   max-width: 430px;
   text-align: right;
@@ -818,7 +843,10 @@ footer a { display: block; margin: 5px 0; }
   border: 1px solid var(--line);
   background: var(--white);
   color: var(--ink);
+  font-weight: 500; /* 不跟著標籤用粗體，填寫的內容比較好讀 */
 }
+/* 提示文字用淡色細字，才不會看起來像已經填好 */
+.checkout-form ::placeholder { color: #a39890; font-weight: 400; opacity: 1; }
 .form-wide { grid-column: 1 / -1; }
 .payment-box {
   display: grid;
@@ -888,6 +916,50 @@ footer a { display: block; margin: 5px 0; }
 .order-result ul { margin: 14px 0; padding-left: 22px; }
 .result-total { font-size: 24px; font-weight: 900; }
 
+/* 加入訂購單後的提示 */
+.catalog-actions > button.is-added { background: #4f7a3a; }
+.cart-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--red);
+  color: var(--white);
+  font-size: 13px;
+  line-height: 1;
+}
+.cart-count[hidden] { display: none; }
+
+/* 手機與平板：底部購物車列（電腦版不顯示） */
+.cart-bar { display: none; }
+@media (max-width: 900px) {
+  .cart-bar {
+    position: fixed;
+    inset: auto 12px 12px;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 18px;
+    background: var(--ink);
+    color: var(--white);
+    font-weight: 900;
+    box-shadow: 0 8px 24px rgba(42, 33, 28, 0.3);
+  }
+  .cart-bar[hidden] { display: none; }
+  .cart-bar b { color: var(--primary); }
+  .cart-bar-go { flex-shrink: 0; font-size: 15px; }
+  .cart-bar.bump { animation: cart-bump 0.4s ease; }
+  body.has-cart-bar { padding-bottom: 76px; }
+}
+@keyframes cart-bump {
+  40% { transform: scale(1.04); }
+}
+
 
 /* ========================================
    17. 捲動淡入動畫
@@ -938,6 +1010,9 @@ footer a { display: block; margin: 5px 0; }
   .feature-banner img { min-height: 320px; }
   .shop-flow { grid-template-columns: repeat(2, 1fr); }
   .catalog-grid { grid-template-columns: repeat(2, minmax(230px, 1fr)); }
+  /* 訂單摘要移到表單上方，不跟著捲動 */
+  .checkout-body { grid-template-columns: 1fr; }
+  .checkout-summary { position: static; order: -1; }
 }
 
 
@@ -981,7 +1056,12 @@ footer a { display: block; margin: 5px 0; }
   .album-overview { grid-template-columns: repeat(2, 1fr); }
   .shop-hero { padding: 52px 20px; }
   .shop-hero p:not(.eyebrow) { font-size: 20px; }
-  .shop-flow { grid-template-columns: 1fr; padding: 20px; }
+  /* 選購流程：手機也維持 2×2，縮小間距與字級，不佔太多版面 */
+  .shop-flow { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 16px 20px; }
+  .shop-flow article { gap: 0; align-content: start; padding: 10px 12px; }
+  .shop-flow b { font-size: 14px; }
+  .shop-flow span { font-size: 17px; }
+  .checkout-summary { padding: 16px; }
   .catalog-grid { grid-template-columns: 1fr; }
   .catalog-card-head { padding: 18px 16px 10px; }
   .catalog-card-head span { font-size: 14px; }

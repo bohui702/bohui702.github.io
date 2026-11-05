@@ -45,7 +45,7 @@
       <a href="index.html">首頁</a>
       <a href="#catalog">商品列表</a>
       <a href="#checkout">訂購資料</a>
-      <a class="nav-cta" href="#cart">購物車</a>
+      <a class="nav-cta" href="#cart">購物車<span class="cart-count" data-cart-count hidden></span></a>
     </nav>
   </header>
 
@@ -98,6 +98,8 @@
         <p>這裡會建立訂單摘要，不會串接線上刷卡。<br>實際付款資訊請等我們人工確認後提供。</p>
       </div>
 
+      <div class="checkout-body">
+      <div class="checkout-main">
       <form class="checkout-form" data-order-form>
         <div class="form-grid">
           <label><span class="required-label">姓名</span><input name="name" type="text" required maxlength="30" autocomplete="name"
@@ -117,16 +119,17 @@
               <option value="自行到店取貨">自行到店取貨</option>
             </select>
           </label>
+          <!-- 提示文字會依配送方式改變（js/shop.js 的 ADDRESS_HINTS） -->
           <label class="form-wide"><span class="required-label">地址或取貨資訊</span><input name="address" type="text" required maxlength="120"
-              placeholder="宅配地址、超商門市"></label>
+              placeholder="請輸入收件地址" data-address-input></label>
           <label class="form-wide">備註<textarea name="note" rows="4" maxlength="300"
-              placeholder="想詢問的商品規格、送禮需求、希望到貨時間等"></textarea></label>
+              placeholder="銀行轉帳請填寫您轉出帳戶的後五碼；也可以寫送禮需求、希望到貨時間等"></textarea></label>
         </div>
 
         <fieldset class="payment-box">
           <legend>付款方式</legend>
           <label><input type="radio" name="payment" value="銀行轉帳" checked>
-            銀行轉帳<span>請依下方帳戶資訊匯款，並在備註填寫轉帳帳號後五碼。</span></label>
+            銀行轉帳<span>請依下方帳戶資訊匯款，並在上方「備註」欄填寫您轉出帳戶的後五碼，方便我們核對。</span></label>
           <label><input type="radio" name="payment" value="貨到付款"> 貨到付款<span>收到商品時付款，運費與代收費依實際配送方式確認。</span></label>
         </fieldset>
 
@@ -147,14 +150,33 @@
               <dd>新洽記商行黃喬壹</dd>
             </div>
           </dl>
-          <p>備註：轉帳收據請妥善保存，在下方備註填寫轉帳帳號後五碼以利出貨人員對帳。</p>
+          <p>備註：轉帳收據請妥善保存，並在上方「備註」欄填寫您轉出帳戶的後五碼，以利出貨人員對帳。</p>
         </section>
 
-        <button class="button primary" type="submit">產生訂單摘要</button>
+        <button class="button primary" type="submit">確認送出訂單</button>
       </form>
 
       <section class="order-result" data-order-result hidden></section>
+      </div>
+
+      <!-- 訂單摘要：電腦版在表單右側跟著捲動，平板與手機顯示在表單上方 -->
+      <aside class="checkout-summary" aria-label="訂單摘要">
+        <h3>訂單摘要</h3>
+        <ul class="summary-list" data-summary-list></ul>
+        <div class="cart-total summary-total">
+          <span>合計</span>
+          <strong data-summary-total>NT$0</strong>
+        </div>
+        <a class="summary-edit" href="#cart">修改商品或數量</a>
+      </aside>
+      </div>
     </section>
+
+    <!-- 手機與平板：購物車有商品時固定在畫面底部 -->
+    <a class="cart-bar" href="#cart" data-cart-bar hidden>
+      <span>購物車 <b data-cart-bar-text></b></span>
+      <span class="cart-bar-go">查看購物車 →</span>
+    </a>
   </main>
 
   <footer>
@@ -171,7 +193,7 @@
     <div>
       <h4>付款提醒</h4>
       <p>不提供網站直接刷卡扣款。</p>
-      <p>訂單由人工確認後再付款。</p>
+      <p>請先確認訂單後再送出。</p>
     </div>
     <p class="copyright">© <span data-year></span> SIN-HIÁP-KÌ. ALL RIGHTS RESERVED.</p>
   </footer>
