@@ -85,6 +85,7 @@
           <span>小計</span>
           <strong data-cart-total>NT$0</strong>
         </div>
+        <p class="free-shipping-hint">運費：郵局宅配 NT$100／超商取貨 NT$70，滿 NT$1,500 免運</p>
         <a class="button primary cart-checkout" href="#checkout">填寫訂購資料</a>
       </aside>
     </section>
@@ -99,76 +100,89 @@
       </div>
 
       <div class="checkout-body">
-      <div class="checkout-main">
-      <form class="checkout-form" data-order-form>
-        <div class="form-grid">
-          <label><span class="required-label">姓名</span><input name="name" type="text" required maxlength="30" autocomplete="name"
-              placeholder="請輸入姓名"></label>
-          <label><span class="required-label">稱謂</span>
-            <select name="title" required>
-              <option value="先生">先生</option>
-              <option value="小姐">小姐</option>
-            </select>
-          </label>
-          <label><span class="required-label">電話</span><input name="phone" type="tel" required maxlength="20" autocomplete="tel"
-              placeholder="請輸入可聯絡電話"></label>
-          <label><span class="required-label">配送方式</span>
-            <select name="delivery" required>
-              <option value="宅配到府">宅配到府</option>
-              <option value="超商店到店">超商店到店</option>
-              <option value="自行到店取貨">自行到店取貨</option>
-            </select>
-          </label>
-          <!-- 提示文字會依配送方式改變（js/shop.js 的 ADDRESS_HINTS） -->
-          <label class="form-wide"><span class="required-label">地址或取貨資訊</span><input name="address" type="text" required maxlength="120"
-              placeholder="請輸入收件地址" data-address-input></label>
-          <label class="form-wide">備註<textarea name="note" rows="4" maxlength="300"
-              placeholder="銀行轉帳請填寫您轉出帳戶的後五碼；也可以寫送禮需求、希望到貨時間等"></textarea></label>
+        <div class="checkout-main">
+          <form class="checkout-form" data-order-form>
+            <div class="form-grid">
+              <label><span class="required-label">姓名</span><input name="name" type="text" required maxlength="30"
+                  autocomplete="name" placeholder="請輸入姓名"></label>
+              <label><span class="required-label">稱謂</span>
+                <select name="title" required>
+                  <option value="先生">先生</option>
+                  <option value="小姐">小姐</option>
+                </select>
+              </label>
+              <label><span class="required-label">電話</span><input name="phone" type="tel" required maxlength="20"
+                  autocomplete="tel" placeholder="請輸入可聯絡電話"></label>
+              <label><span class="required-label">配送方式</span>
+                <!-- 運費設定在 js/shop.js 的 SHIPPING，要和 Supabase create_order 一致 -->
+                <select name="delivery" required>
+                  <option value="自行到店">自行到店取貨 </option>
+                  <option value="郵局宅配">郵局宅配（運費 NT$100）</option>
+                  <option value="超商取貨">超商取貨（運費 NT$70）</option>
+                </select>
+              </label>
+              <ul class="shipping-rules form-wide">
+                <li>訂單商品滿 NT$1,500 免運</li>
+                <li>先匯款，排單出貨；超商取貨不付款</li>
+                <li>收貨地僅限臺灣本島，離島及國外另計</li>
+              </ul>
+              <!-- 提示文字會依配送方式改變（js/shop.js 的 ADDRESS_HINTS） -->
+              <label class="form-wide"><span class="required-label">地址或取貨資訊</span><input name="address" type="text"
+                  required maxlength="120" placeholder="請輸入收件地址" data-address-input></label>
+              <label class="form-wide">備註<textarea name="note" rows="4" maxlength="300"
+                  placeholder="銀行轉帳請填寫您轉出帳戶的後五碼；也可以寫送禮需求、希望到貨時間等"></textarea></label>
+            </div>
+
+            <fieldset class="payment-box">
+              <legend>付款方式</legend>
+              <label><input type="radio" name="payment" value="銀行轉帳" checked>
+                銀行轉帳<span>請依下方帳戶資訊匯款，並在上方「備註」欄填寫您轉出帳戶的後五碼，方便我們核對。</span></label>
+              <label data-cod-option><input type="radio" name="payment" value="貨到付款">
+                貨到付款<span>僅限郵局宅配，收到商品時付款；超商取貨不提供貨到付款。</span></label>
+            </fieldset>
+
+            <section class="bank-info" data-bank-transfer>
+              <h3>新洽記商行 • 銀行匯款資訊：</h3>
+              <dl>
+                <div>
+                  <dt>銀行代碼</dt>
+                  <dd>685 雲林縣土庫鎮農會</dd>
+                </div>
+                <div class="account-row">
+                  <dt>帳戶號碼</dt>
+                  <dd><strong data-account-number>68501010021491</strong><button type="button"
+                      data-copy-account>複製</button>
+                  </dd>
+                </div>
+                <div>
+                  <dt>帳戶戶名</dt>
+                  <dd>新洽記商行黃喬壹</dd>
+                </div>
+              </dl>
+              <p>備註：轉帳收據請妥善保存，並在上方「備註」欄填寫您轉出帳戶的後五碼，以利出貨人員對帳。</p>
+            </section>
+
+            <button class="button primary" type="submit">確認送出訂單</button>
+          </form>
+
+          <section class="order-result" data-order-result hidden></section>
         </div>
 
-        <fieldset class="payment-box">
-          <legend>付款方式</legend>
-          <label><input type="radio" name="payment" value="銀行轉帳" checked>
-            銀行轉帳<span>請依下方帳戶資訊匯款，並在上方「備註」欄填寫您轉出帳戶的後五碼，方便我們核對。</span></label>
-          <label><input type="radio" name="payment" value="貨到付款"> 貨到付款<span>收到商品時付款，運費與代收費依實際配送方式確認。</span></label>
-        </fieldset>
-
-        <section class="bank-info" data-bank-transfer>
-          <h3>新洽記商行 • 銀行匯款資訊：</h3>
-          <dl>
-            <div>
-              <dt>銀行代碼</dt>
-              <dd>685 雲林縣土庫鎮農會</dd>
-            </div>
-            <div class="account-row">
-              <dt>帳戶號碼</dt>
-              <dd><strong data-account-number>68501010021491</strong><button type="button" data-copy-account>複製</button>
-              </dd>
-            </div>
-            <div>
-              <dt>帳戶戶名</dt>
-              <dd>新洽記商行黃喬壹</dd>
-            </div>
-          </dl>
-          <p>備註：轉帳收據請妥善保存，並在上方「備註」欄填寫您轉出帳戶的後五碼，以利出貨人員對帳。</p>
-        </section>
-
-        <button class="button primary" type="submit">確認送出訂單</button>
-      </form>
-
-      <section class="order-result" data-order-result hidden></section>
-      </div>
-
-      <!-- 訂單摘要：電腦版在表單右側跟著捲動，平板與手機顯示在表單上方 -->
-      <aside class="checkout-summary" aria-label="訂單摘要">
-        <h3>訂單摘要</h3>
-        <ul class="summary-list" data-summary-list></ul>
-        <div class="cart-total summary-total">
-          <span>合計</span>
-          <strong data-summary-total>NT$0</strong>
-        </div>
-        <a class="summary-edit" href="#cart">修改商品或數量</a>
-      </aside>
+        <!-- 訂單摘要：電腦版在表單右側跟著捲動，平板與手機顯示在表單上方 -->
+        <aside class="checkout-summary" aria-label="訂單摘要">
+          <h3>訂單摘要</h3>
+          <ul class="summary-list" data-summary-list></ul>
+          <ul class="summary-list summary-fees">
+            <li><span>商品小計</span><span data-summary-subtotal>NT$0</span></li>
+            <li><span data-shipping-label>運費</span><span data-summary-shipping>NT$0</span></li>
+          </ul>
+          <p class="free-shipping-hint" data-free-shipping-hint></p>
+          <div class="cart-total summary-total">
+            <span>合計</span>
+            <strong data-summary-total>NT$0</strong>
+          </div>
+          <a class="summary-edit" href="#cart">修改商品或數量</a>
+        </aside>
       </div>
     </section>
 

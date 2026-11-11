@@ -810,6 +810,14 @@ footer a { display: block; margin: 5px 0; }
   font-size: 16px;
 }
 .summary-list li span:last-child { flex-shrink: 0; font-weight: 700; }
+.summary-fees {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.free-shipping-hint { margin: 8px 0 0; color: var(--red); font-size: 15px; font-weight: 700; }
+.free-shipping-hint:empty { display: none; }
+.cart-panel .free-shipping-hint { margin: -8px 0 14px; color: var(--muted); font-weight: 500; }
 .summary-total { margin: 14px 0 10px; }
 .summary-edit { color: var(--muted); font-size: 15px; text-decoration: underline; }
 .checkout-head > p {
@@ -848,6 +856,17 @@ footer a { display: block; margin: 5px 0; }
 /* 提示文字用淡色細字，才不會看起來像已經填好 */
 .checkout-form ::placeholder { color: #a39890; font-weight: 400; opacity: 1; }
 .form-wide { grid-column: 1 / -1; }
+/* 配送方式下方的運費規則 */
+.shipping-rules {
+  margin: -6px 0 0;
+  padding: 10px 14px 10px 32px;
+  background: var(--white);
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+.payment-box label.is-disabled { opacity: .5; cursor: not-allowed; }
 .payment-box {
   display: grid;
   gap: 12px;

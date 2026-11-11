@@ -140,8 +140,9 @@
 .unpaid { color: var(--red); font-weight: 900; }
 
 .order-items ul { margin: 0; padding: 0; list-style: none; }
-.order-items li, .order-total { display: flex; justify-content: space-between; gap: 12px; }
+.order-items li, .order-total, .order-shipping { display: flex; justify-content: space-between; gap: 12px; }
 .order-items li { padding: 4px 0; border-bottom: 1px dashed var(--line); }
+.order-shipping { margin: 8px 0 0; padding: 4px 0; border-bottom: 1px dashed var(--line); }
 .order-total { margin: 8px 0 0; font-weight: 900; }
 .order-total strong { color: var(--red); font-size: 20px; }
 

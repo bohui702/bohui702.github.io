@@ -16,6 +16,26 @@ const cartBar = document.querySelector("[data-cart-bar]");
 const cartBarText = document.querySelector("[data-cart-bar-text]");
 const cartCount = document.querySelector("[data-cart-count]");
 const addressInput = document.querySelector("[data-address-input]");
+const summarySubtotal = document.querySelector("[data-summary-subtotal]");
+const summaryShipping = document.querySelector("[data-summary-shipping]");
+const shippingLabel = document.querySelector("[data-shipping-label]");
+const freeShippingHint = document.querySelector("[data-free-shipping-hint]");
+const codOption = document.querySelector("[data-cod-option]");
+
+
+// ========================================
+// 運費（只是顯示用；實際運費由 Supabase create_order 重新計算）
+// 改這裡時也要改 supabase/migrations/2026-11-11_shipping_fee.sql 的 shipping_fee()
+// ========================================
+const SHIPPING = {
+  fees: { "自行到店": 0, "郵局宅配": 100, "超商取貨": 70 },
+  freeThreshold: 1500   // 商品小計（含多件優惠後）滿這個金額免運
+};
+
+function shippingFee(delivery, subtotal) {
+  if (subtotal <= 0 || subtotal >= SHIPPING.freeThreshold) return 0;
+  return SHIPPING.fees[delivery] ?? 0;
+}
 
 
 // 單一商品最多訂購數量（和 Supabase create_order 的上限一致）
@@ -211,7 +231,16 @@ function renderSummary() {
       }).join("")
     : `<li class="cart-empty">尚未選擇商品。</li>`;
 
-  summaryTotal.textContent = money(total);
+  const delivery = orderForm.elements.delivery.value;
+  const fee = shippingFee(delivery, total);
+
+  summarySubtotal.textContent = money(total);
+  shippingLabel.textContent = `運費（${delivery}）`;
+  summaryShipping.textContent = total > 0 && fee === 0 ? "免運" : money(fee);
+  freeShippingHint.textContent = SHIPPING.fees[delivery] > 0 && total > 0 && total < SHIPPING.freeThreshold
+    ? `再買 ${money(SHIPPING.freeThreshold - total)} 即可免運`
+    : "";
+  summaryTotal.textContent = money(total + fee);
 
   cartCount.hidden = cartQuantity === 0;
   cartCount.textContent = cartQuantity;
@@ -355,6 +384,8 @@ const ORDER_ERRORS = {
   ORDER_QUANTITY_TOO_LARGE:  `單一商品最多訂購 ${MAX_QUANTITY} 份，大量訂購請直接與我們聯絡。`,
   ORDER_DUPLICATE_ITEM:      "訂購單裡有重複的商品，請重新整理頁面後再試一次。",
   ORDER_PRODUCT_UNAVAILABLE: "訂購單裡有商品目前暫停販售，請重新整理頁面後再選購。",
+  ORDER_DELIVERY_INVALID:    "請重新選擇配送方式（郵局宅配或超商取貨），若仍無法送出請重新整理頁面。",
+  ORDER_PAYMENT_INVALID:     "超商取貨不提供貨到付款，請改選銀行轉帳。",
   ORDER_RATE_LIMIT_PHONE:    "這支電話剛剛已送出多張訂單，請稍候 10 分鐘再試；若需修改訂單請直接與我們聯絡。",
   ORDER_RATE_LIMIT_GLOBAL:   "目前訂單較多，請稍候幾分鐘再送出，或直接與我們聯絡。"
 };
@@ -473,6 +504,7 @@ orderForm.addEventListener("submit", async event => {
 
     const orderNumber = result.order_number;
     const totalAmount = Number(result.total_amount || 0);
+    const resultShipping = Number(result.shipping_fee || 0);
     const resultItems = Array.isArray(result.items)
       ? result.items
       : [];
@@ -500,6 +532,10 @@ orderForm.addEventListener("submit", async event => {
         : ""
       }
 
+      <p>
+        運費（${formData.get("delivery")}）：${resultShipping ? money(resultShipping) : "免運"}
+      </p>
+
       <p class="result-total">
         訂單總額：${money(totalAmount)}
       </p>
@@ -515,7 +551,7 @@ orderForm.addEventListener("submit", async event => {
     renderCart();
 
     orderForm.reset();
-    updateAddressHint();
+    updateDelivery();
 
     if (bankTransfer) {
       bankTransfer.hidden = true;
@@ -566,21 +602,34 @@ orderForm
 
 
 // ========================================
-// 配送方式：地址欄的提示文字跟著改
+// 配送方式：地址欄提示、運費、超商取貨不能貨到付款
 // ========================================
 const ADDRESS_HINTS = {
-  "宅配到府": "請輸入收件地址",
-  "超商店到店": "門市名稱＋店號",
-  "自行到店取貨": "請填「自取」，可註明希望取貨的日期時間"
+  "自行到店": "請填「自取」，可註明希望取貨的日期時間",
+  "郵局宅配": "請輸入收件地址（限臺灣本島）",
+  "超商取貨": "超商名稱＋門市名稱＋店號"
 };
 
-function updateAddressHint() {
-  addressInput.placeholder =
-    ADDRESS_HINTS[orderForm.elements.delivery.value] || "請輸入地址或取貨資訊";
+function updateDelivery() {
+  const delivery = orderForm.elements.delivery.value;
+
+  addressInput.placeholder = ADDRESS_HINTS[delivery] || "請輸入地址或取貨資訊";
+
+  // 貨到付款僅限郵局宅配（超商取貨不付款）：其他方式停用，已選的話改回銀行轉帳
+  const codInput = codOption.querySelector("input");
+  const noCod = delivery !== "郵局宅配";
+  codInput.disabled = noCod;
+  codOption.classList.toggle("is-disabled", noCod);
+  if (noCod && codInput.checked) {
+    orderForm.elements.payment.value = "銀行轉帳";
+  }
+  bankTransfer.hidden = orderForm.elements.payment.value !== "銀行轉帳";
+
+  renderSummary();
 }
 
-orderForm.elements.delivery.addEventListener("change", updateAddressHint);
-updateAddressHint();
+orderForm.elements.delivery.addEventListener("change", updateDelivery);
+updateDelivery();
 
 
 // ========================================

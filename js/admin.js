@@ -295,6 +295,7 @@ function orderCard(order) {
         <ul>
           ${items.map(item => `<li><span>${escapeHtml(item.product_name)} × ${item.quantity}</span><span>${money(item.unit_price * item.quantity)}</span></li>`).join("")}
         </ul>
+        ${order.shipping_fee ? `<p class="order-shipping"><span>運費</span><span>${money(order.shipping_fee)}</span></p>` : ""}
         <p class="order-total"><span>總額</span><strong>${money(order.total_amount)}</strong></p>
       </section>
     </div>
